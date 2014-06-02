@@ -2,6 +2,7 @@ package CS355.mcqueen.keith;
 
 import CS355.LWJGL.Line3D;
 import CS355.LWJGL.StudentLWJGLController;
+import org.lwjgl.Sys;
 
 import static CS355.LWJGL.LWJGLSandbox.DISPLAY_HEIGHT;
 import static CS355.LWJGL.LWJGLSandbox.DISPLAY_WIDTH;
@@ -26,7 +27,20 @@ public class CameraController extends StudentLWJGLController {
 	public static final float INITIAL_Z = -20.0f;
 
 	public static final float WALK_DISTANCE = 1.0f;
-	public static final float ROTATION_ANGLE = (float) toRadians(20.0);
+//	public static final float ROTATION_ANGLE = (float) toRadians(20.0f);
+	public static final float ROTATION_ANGLE = 1.0f;
+	//	public static final double _90_DEGREES = PI / 2.0;
+	public static final double _90_DEGREES = 90;
+
+	/**
+	 * We walk/fly/strafe at a rate of 10.0 units/sec
+	 */
+	public static final float MOVEMENT_SPEED = 100.0f;
+
+	/**
+	 * We rotate at a rate of 1 deg/sec (converted to radians/sec)
+	 */
+	public static final float ROTATION_SPEED = (float) toRadians(1.0f);
 
 	// position of the camera (really the world)
 	private float x = INITIAL_X;
@@ -35,6 +49,8 @@ public class CameraController extends StudentLWJGLController {
 
 	// orientation of the camera (the world, really) about the Y axis in radians
 	private float yaw = 0.0f;
+
+	private float lastTime = Sys.getTime();
 
 	@Override
 	public void resizeGL() {
@@ -58,45 +74,57 @@ public class CameraController extends StudentLWJGLController {
 
 	@Override
 	public void updateKeyboard() {
+//		float time = Sys.getTime();
+//		float dt = (time - this.lastTime);
+//		this.lastTime = time;
+
 		if (isKeyDown(KEY_W) || isKeyDown(KEY_UP)) {
 
 			// walk 1 unit forward
+//			this.forward(dt * MOVEMENT_SPEED);
 			this.forward(WALK_DISTANCE);
 
 		} else if (isKeyDown(KEY_S) || isKeyDown(KEY_DOWN)) {
 
 			// walk 1 unit backward
+//			this.back(dt * MOVEMENT_SPEED);
 			this.back(WALK_DISTANCE);
 
 		} else if (isKeyDown(KEY_A) || isKeyDown(KEY_LEFT)) {
 
 			// walk 1 unit to the left
+//			this.left(dt * MOVEMENT_SPEED);
 			this.left(WALK_DISTANCE);
 
 		} else if (isKeyDown(KEY_D) || isKeyDown(KEY_RIGHT)) {
 
 			// walk 1 unit to the right
+//			this.right(dt * MOVEMENT_SPEED);
 			this.right(WALK_DISTANCE);
 
 		} else if (isKeyDown(KEY_Q)) {
 
 			// turn left
+//			this.turn(-dt * ROTATION_SPEED);
 			this.turn(-ROTATION_ANGLE);
 
 		} else if (isKeyDown(KEY_E)) {
 
 			// turn right
+//			this.turn(dt * ROTATION_SPEED);
 			this.turn(ROTATION_ANGLE);
 
 		} else if (isKeyDown(KEY_R)) {
 
 			// fly up
-			this.fly(-1.0f);
+//			this.fly(-dt * MOVEMENT_SPEED);
+			this.fly(-WALK_DISTANCE);
 
 		} else if (isKeyDown(KEY_F)) {
 
 			// fly down
-			this.fly(1.0f);
+//			this.fly(dt * MOVEMENT_SPEED);
+			this.fly(WALK_DISTANCE);
 
 		} else if (isKeyDown(KEY_O)) {
 
@@ -108,6 +136,8 @@ public class CameraController extends StudentLWJGLController {
 			// switch to perspective mode
 			this.perspectiveMode();
 		}
+
+//		this.render();
 	}
 
 	@Override
@@ -130,31 +160,11 @@ public class CameraController extends StudentLWJGLController {
 	}
 
 	private void lookThrough() {
-		// translate
-		glTranslatef(this.x, this.y, this.z);
-
 		// rotate about the y axis
 		glRotatef(this.yaw, 0.0f, 1.0f, 0.0f);
 
-//		// rotate
-//		FloatBuffer rotationBuffer = BufferUtils.createFloatBuffer(32);
-//		rotationBuffer.put(new float[]{
-//				(float) cos(this.yaw), 0.0f, (float) -sin(this.yaw), 0.0f,
-//				0.0f, 1.0f, 0.0f, 0.0f,
-//				(float) sin(this.yaw), 0.0f, (float) cos(this.yaw), 0.0f,
-//				0, 0, 0, 1
-//		});
-//		glMultMatrix(rotationBuffer);
-//
-//		// translate
-//		FloatBuffer translationBuffer = BufferUtils.createFloatBuffer(32);
-//		translationBuffer.put(new float[] {
-//				1.0f, 0.0f, 0.0f, 0.0f,
-//				0.0f, 1.0f, 0.0f, 0.0f,
-//				0.0f, 0.0f, 1.0f, 0.0f,
-//				this.x, this.y, this.z, 1.0f
-//		});
-//		glMultMatrix(translationBuffer);
+		// translate
+		glTranslatef(this.x, this.y, this.z);
 	}
 
 	private void drawLine(Line3D line) {
@@ -176,14 +186,18 @@ public class CameraController extends StudentLWJGLController {
 
 	private void left(float distance) {
 //		this.x += distance;
-		this.x -= distance * (float) sin(this.yaw - PI / 2.0);
-		this.z += distance * (float) cos(this.yaw - PI / 2.0);
+//		this.x -= distance * (float) sin(this.yaw - _90_DEGREES);
+//		this.z += distance * (float) cos(this.yaw - _90_DEGREES);
+		this.x -= distance * (float) sin(toRadians(this.yaw - _90_DEGREES));
+		this.z += distance * (float) cos(toRadians(this.yaw - _90_DEGREES));
 	}
 
 	private void right(float distance) {
 //		this.x -= distance;
-		this.x -= distance * (float) sin(this.yaw + PI / 2.0);
-		this.z += distance * (float) cos(this.yaw + PI / 2.0);
+//		this.x -= distance * (float) sin(this.yaw + _90_DEGREES);
+//		this.z += distance * (float) cos(this.yaw + _90_DEGREES);
+		this.x -= distance * (float) sin(toRadians(this.yaw + _90_DEGREES));
+		this.z += distance * (float) cos(toRadians(this.yaw + _90_DEGREES));
 	}
 
 	private void fly(float distance) {
