@@ -1,6 +1,6 @@
 package CS355.LWJGL;
 
-import java.util.logging.Level;
+import CS355.mcqueen.keith.CameraController;
 
 /**
  *
@@ -15,7 +15,7 @@ public class CS355LWJGL
     try 
     {
       main = new LWJGLSandbox();
-      main.create(new SOLUTION());
+      main.create(new CameraController());
       main.run();
     }
     catch(Exception ex) 
