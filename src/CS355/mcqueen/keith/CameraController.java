@@ -2,7 +2,6 @@ package CS355.mcqueen.keith;
 
 import CS355.LWJGL.Line3D;
 import CS355.LWJGL.StudentLWJGLController;
-import org.lwjgl.Sys;
 
 import static CS355.LWJGL.LWJGLSandbox.DISPLAY_HEIGHT;
 import static CS355.LWJGL.LWJGLSandbox.DISPLAY_WIDTH;
@@ -24,25 +23,11 @@ public class CameraController extends StudentLWJGLController {
 
 	public static final float INITIAL_X = 0.0f;
 	public static final float INITIAL_Y = -3.0f;
-//	public static final float INITIAL_Y = 0.0f;
 	public static final float INITIAL_Z = -20.0f;
-//	public static final float INITIAL_Z = 0.0f;
 
 	public static final float WALK_DISTANCE = 1.0f;
-//	public static final float ROTATION_ANGLE = (float) toRadians(20.0f);
 	public static final float ROTATION_ANGLE = 1.0f;
-	//	public static final double _90_DEGREES = PI / 2.0;
 	public static final double _90_DEGREES = 90;
-
-	/**
-	 * We walk/fly/strafe at a rate of 10.0 units/sec
-	 */
-	public static final float MOVEMENT_SPEED = 100.0f;
-
-	/**
-	 * We rotate at a rate of 1 deg/sec (converted to radians/sec)
-	 */
-	public static final float ROTATION_SPEED = (float) toRadians(1.0f);
 
 	// position of the camera (really the world)
 	private float x = INITIAL_X;
@@ -51,8 +36,6 @@ public class CameraController extends StudentLWJGLController {
 
 	// orientation of the camera (the world, really) about the Y axis in radians
 	private float yaw = 0.0f;
-
-	private float lastTime = Sys.getTime();
 
 	@Override
 	public void resizeGL() {
@@ -76,10 +59,6 @@ public class CameraController extends StudentLWJGLController {
 
 	@Override
 	public void updateKeyboard() {
-//		float time = Sys.getTime();
-//		float dt = (time - this.lastTime);
-//		this.lastTime = time;
-
 		if (isKeyDown(KEY_W) || isKeyDown(KEY_UP)) {
 
 			// walk 1 unit forward
