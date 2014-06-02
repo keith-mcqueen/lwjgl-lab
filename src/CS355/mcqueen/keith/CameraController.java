@@ -24,7 +24,9 @@ public class CameraController extends StudentLWJGLController {
 
 	public static final float INITIAL_X = 0.0f;
 	public static final float INITIAL_Y = -3.0f;
+//	public static final float INITIAL_Y = 0.0f;
 	public static final float INITIAL_Z = -20.0f;
+//	public static final float INITIAL_Z = 0.0f;
 
 	public static final float WALK_DISTANCE = 1.0f;
 //	public static final float ROTATION_ANGLE = (float) toRadians(20.0f);
@@ -81,43 +83,36 @@ public class CameraController extends StudentLWJGLController {
 		if (isKeyDown(KEY_W) || isKeyDown(KEY_UP)) {
 
 			// walk 1 unit forward
-//			this.forward(dt * MOVEMENT_SPEED);
 			this.forward(WALK_DISTANCE);
 
 		} else if (isKeyDown(KEY_S) || isKeyDown(KEY_DOWN)) {
 
 			// walk 1 unit backward
-//			this.back(dt * MOVEMENT_SPEED);
 			this.back(WALK_DISTANCE);
 
 		} else if (isKeyDown(KEY_A) || isKeyDown(KEY_LEFT)) {
 
 			// walk 1 unit to the left
-//			this.left(dt * MOVEMENT_SPEED);
 			this.left(WALK_DISTANCE);
 
 		} else if (isKeyDown(KEY_D) || isKeyDown(KEY_RIGHT)) {
 
 			// walk 1 unit to the right
-//			this.right(dt * MOVEMENT_SPEED);
 			this.right(WALK_DISTANCE);
 
 		} else if (isKeyDown(KEY_Q)) {
 
 			// turn left
-//			this.turn(-dt * ROTATION_SPEED);
 			this.turn(-ROTATION_ANGLE);
 
 		} else if (isKeyDown(KEY_E)) {
 
 			// turn right
-//			this.turn(dt * ROTATION_SPEED);
 			this.turn(ROTATION_ANGLE);
 
 		} else if (isKeyDown(KEY_R)) {
 
 			// fly up
-//			this.fly(-dt * MOVEMENT_SPEED);
 			this.fly(-WALK_DISTANCE);
 
 		} else if (isKeyDown(KEY_F)) {
@@ -135,9 +130,16 @@ public class CameraController extends StudentLWJGLController {
 
 			// switch to perspective mode
 			this.perspectiveMode();
-		}
 
-//		this.render();
+		} else if (isKeyDown(KEY_H)) {
+
+			// reset back to the original state
+			this.x = INITIAL_X;
+			this.y = INITIAL_Y;
+			this.z = INITIAL_Z;
+			this.yaw = 0.0f;
+
+		}
 	}
 
 	@Override
@@ -148,9 +150,6 @@ public class CameraController extends StudentLWJGLController {
 		// set the color (green)
 		glColor3f(0.0f, 1.0f, 0.0f);
 
-		// "reset" all transformations
-		glLoadIdentity();
-
 		this.lookThrough();
 
 		// draw the lines in the model
@@ -160,6 +159,9 @@ public class CameraController extends StudentLWJGLController {
 	}
 
 	private void lookThrough() {
+		// "reset" all transformations
+		glLoadIdentity();
+
 		// rotate about the y axis
 		glRotatef(this.yaw, 0.0f, 1.0f, 0.0f);
 
@@ -173,29 +175,21 @@ public class CameraController extends StudentLWJGLController {
 	}
 
 	private void forward(float distance) {
-//		this.z -= distance;
-		this.x -= distance * (float) sin(this.yaw);
-		this.z += distance * (float) cos(this.yaw);
+		this.x -= distance * (float) sin(toRadians(this.yaw));
+		this.z += distance * (float) cos(toRadians(this.yaw));
 	}
 
 	private void back(float distance) {
-//		this.z += distance;
-		this.x += distance * (float) sin(this.yaw);
-		this.z -= distance * (float) cos(this.yaw);
+		this.x += distance * (float) sin(toRadians(this.yaw));
+		this.z -= distance * (float) cos(toRadians(this.yaw));
 	}
 
 	private void left(float distance) {
-//		this.x += distance;
-//		this.x -= distance * (float) sin(this.yaw - _90_DEGREES);
-//		this.z += distance * (float) cos(this.yaw - _90_DEGREES);
 		this.x -= distance * (float) sin(toRadians(this.yaw - _90_DEGREES));
 		this.z += distance * (float) cos(toRadians(this.yaw - _90_DEGREES));
 	}
 
 	private void right(float distance) {
-//		this.x -= distance;
-//		this.x -= distance * (float) sin(this.yaw + _90_DEGREES);
-//		this.z += distance * (float) cos(this.yaw + _90_DEGREES);
 		this.x -= distance * (float) sin(toRadians(this.yaw + _90_DEGREES));
 		this.z += distance * (float) cos(toRadians(this.yaw + _90_DEGREES));
 	}
@@ -221,7 +215,12 @@ public class CameraController extends StudentLWJGLController {
 		glMatrixMode(GL_PROJECTION);
 
 		glLoadIdentity ();
-		glOrtho(0.0, DISPLAY_WIDTH, DISPLAY_HEIGHT, 0.0, 10.0, 200.0);
+		glOrtho(-DISPLAY_WIDTH / 100.0f,
+				DISPLAY_WIDTH / 100.0f,
+				-DISPLAY_HEIGHT / 100.0f,
+				DISPLAY_HEIGHT / 100.0f,
+				Z_NEAR,
+				Z_FAR);
 
 		glMatrixMode(GL_MODELVIEW);
 	}
