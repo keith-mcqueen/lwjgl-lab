@@ -127,25 +127,32 @@ public class CameraController extends StudentLWJGLController {
         super.render();
 
         // set the color (green)
-        glColor3f(0.0f, 1.0f, 0.0f);
+//        glColor3f(0.0f, 1.0f, 0.0f);
 
         this.lookThrough();
 
         // draw the lines in the model
-        glBegin(GL_LINES);
-        this.getModel().forEach(this::drawLine);
-        glEnd();
+//        glBegin(GL_LINES);
+//        glBegin(GL_TRIANGLES);
+//        this.getModel().forEach(this::drawLine);
+//        glEnd();
+
+        GridModel gridModel = new GridModel(-100, 100, 10);
+        gridModel.renderAsWireframe();
+
+        HouseModel2 houseModel = new HouseModel2();
+        houseModel.renderAsWireframe();
     }
 
     private void lookThrough() {
         // "reset" all transformations
         glLoadIdentity();
 
-        // rotate about the y axis
-        glRotatef(this.yaw, 0.0f, 1.0f, 0.0f);
-
         // translate
         glTranslatef(this.x, this.y, this.z);
+
+        // rotate about the y axis
+        glRotatef(this.yaw, 0.0f, 1.0f, 0.0f);
     }
 
     private void drawLine(Line3D line) {

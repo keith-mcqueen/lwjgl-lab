@@ -12,7 +12,7 @@ public class CS355LWJGL {
             main = new LWJGLSandbox();
             main.create(new CameraController());
             main.run();
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             ex.printStackTrace();
         } finally {
             if (main != null) {
@@ -20,5 +20,4 @@ public class CS355LWJGL {
             }
         }
     }
-
 }
