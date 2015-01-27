@@ -1,6 +1,5 @@
 package CS355.mcqueen.keith;
 
-import CS355.LWJGL.Line3D;
 import CS355.LWJGL.StudentLWJGLController;
 
 import static CS355.LWJGL.LWJGLSandbox.DISPLAY_HEIGHT;
@@ -36,6 +35,15 @@ public class CameraController extends StudentLWJGLController {
 
     // orientation of the camera (the world, really) about the Y axis in radians
     private float yaw = 0.0f;
+
+    private final GridModel gridModel = new GridModel(-100, 100, 10);
+    private Model3D objFileModel;
+
+    public CameraController(String[] args) {
+        if (args.length > 0) {
+            this.objFileModel = new ObjFileModel(args[0]);
+        }
+    }
 
     @Override
     public void resizeGL() {
@@ -129,19 +137,19 @@ public class CameraController extends StudentLWJGLController {
         // set the color (green)
 //        glColor3f(0.0f, 1.0f, 0.0f);
 
+        // update the camera position
         this.lookThrough();
 
-        // draw the lines in the model
-//        glBegin(GL_LINES);
-//        glBegin(GL_TRIANGLES);
-//        this.getModel().forEach(this::drawLine);
-//        glEnd();
+        // render the "floor" grid
+        this.gridModel.renderAsWireframe();
 
-        GridModel gridModel = new GridModel(-100, 100, 10);
-        gridModel.renderAsWireframe();
+        // render the obj-file model if there is one
+        if (null != this.objFileModel) {
+            this.objFileModel.renderAsWireframe();
+        }
 
-        HouseModel2 houseModel = new HouseModel2();
-        houseModel.renderAsWireframe();
+//        HouseModel2 houseModel = new HouseModel2();
+//        houseModel.renderAsWireframe();
     }
 
     private void lookThrough() {
@@ -153,11 +161,6 @@ public class CameraController extends StudentLWJGLController {
 
         // rotate about the y axis
         glRotatef(this.yaw, 0.0f, 1.0f, 0.0f);
-    }
-
-    private void drawLine(Line3D line) {
-        glVertex3d(line.start.x, line.start.y, line.start.z);
-        glVertex3d(line.end.x, line.end.y, line.end.z);
     }
 
     private void forward(float distance) {

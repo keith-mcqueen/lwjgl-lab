@@ -3,9 +3,6 @@ package CS355.mcqueen.keith;
 import CS355.LWJGL.Point3D;
 import static org.lwjgl.opengl.GL11.*;
 
-/**
- * Created by keith on 1/26/15.
- */
 public class LineRenderer extends Renderer {
     @Override
     public void render(Point3D... points) {

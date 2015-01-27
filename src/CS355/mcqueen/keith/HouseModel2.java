@@ -1,11 +1,7 @@
 package CS355.mcqueen.keith;
 
-import CS355.LWJGL.Line3D;
 import CS355.LWJGL.Point3D;
 
-/**
- * Created by keith on 1/26/15.
- */
 public class HouseModel2 extends Model3D {
     @Override
     public void renderAsWireframe() {

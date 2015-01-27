@@ -7,9 +7,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by keith on 1/24/15.
- */
 public abstract class Model3D implements Iterable<Point3D> {
     private List<Point3D> vertices = new ArrayList<>();
 
@@ -27,7 +24,7 @@ public abstract class Model3D implements Iterable<Point3D> {
     }
 
     protected void addVertex(long x, long y, long z) {
-        this.vertices.add(new Point3D(x, y, z));
+        this.addVertex(new Point3D(x, y, z));
     }
 
     protected void addVertex(float x, float y, float z) {
@@ -35,7 +32,15 @@ public abstract class Model3D implements Iterable<Point3D> {
     }
 
     protected void addVertex(double x, double y, double z) {
-        this.vertices.add(new Point3D(x, y, z));
+        this.addVertex(new Point3D(x, y, z));
+    }
+
+    protected void addVertex(Point3D vertex) {
+        this.vertices.add(vertex);
+    }
+
+    protected Point3D getVertex(int index) {
+        return this.vertices.get(index);
     }
 
     public abstract void renderAsWireframe();

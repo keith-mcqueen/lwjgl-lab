@@ -10,7 +10,7 @@ public class CS355LWJGL {
         LWJGLSandbox main = null;
         try {
             main = new LWJGLSandbox();
-            main.create(new CameraController());
+            main.create(new CameraController(args));
             main.run();
         } catch (Throwable ex) {
             ex.printStackTrace();

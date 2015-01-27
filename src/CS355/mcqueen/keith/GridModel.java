@@ -2,9 +2,6 @@ package CS355.mcqueen.keith;
 
 import CS355.LWJGL.Point3D;
 
-/**
- * Created by keith on 1/24/15.
- */
 public class GridModel extends Model3D {
     private int min;
     private int max;
