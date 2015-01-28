@@ -33,4 +33,11 @@ public class WireframeRenderer extends Renderer {
         // end lines
         glEnd();
     }
+
+    @Override
+    public void setColor(float r, float g, float b) {
+        super.setColor(r, g, b);
+
+        glColor3f(r, g, b);
+    }
 }

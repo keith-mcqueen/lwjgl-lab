@@ -1,11 +1,19 @@
 package CS355.mcqueen.keith;
 
-import static org.lwjgl.opengl.GL11.*;
-
 public abstract class Renderer {
+    private Color baseColor;
+
     public abstract void render(Triangle3D triangle);
 
-    void setColor(float r, float g, float b) {
-        glColor3f(r, g, b);
+    public void setColor(float r, float g, float b) {
+        this.setColor(new Color(r, g, b));
+    }
+
+    public void setColor(Color color) {
+        this.baseColor = color;
+    }
+
+    public Color getColor() {
+        return this.baseColor;
     }
 }

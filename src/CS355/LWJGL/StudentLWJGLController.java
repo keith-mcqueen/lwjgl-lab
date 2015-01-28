@@ -31,6 +31,7 @@ package CS355.LWJGL;
 import org.lwjgl.input.Keyboard;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 
 /**
@@ -72,7 +73,7 @@ public class StudentLWJGLController implements CS355LWJGLController {
     @Override
     public void render() {
         //This clears the screen.
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //Do your drawing here.
     }

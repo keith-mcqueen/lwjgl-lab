@@ -144,7 +144,7 @@ public class CameraController extends StudentLWJGLController {
 
         // render the obj-file model if there is one
         if (null != this.objFileModel) {
-            renderer = new SurfaceRenderer();
+            renderer = new SurfaceRenderer(new FlatShader(new AmbientLightSource()));
             renderer.setColor(1.0f, 0.0f, 0.0f);
             this.objFileModel.render(renderer);
         }
