@@ -138,12 +138,13 @@ public class CameraController extends StudentLWJGLController {
         this.lookThrough();
 
         // render the "floor" grid
-        WireframeRenderer renderer = new WireframeRenderer();
-//        renderer.setColor(0.0f, 1.0f, 0.0f);
-//        this.gridModel.render(renderer);
+        Renderer renderer = new WireframeRenderer();
+        renderer.setColor(0.0f, 1.0f, 0.0f);
+        this.gridModel.render(renderer);
 
         // render the obj-file model if there is one
         if (null != this.objFileModel) {
+            renderer = new SurfaceRenderer();
             renderer.setColor(1.0f, 0.0f, 0.0f);
             this.objFileModel.render(renderer);
         }
