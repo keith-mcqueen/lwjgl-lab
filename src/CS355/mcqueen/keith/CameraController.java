@@ -1,5 +1,6 @@
 package CS355.mcqueen.keith;
 
+import CS355.LWJGL.Point3D;
 import CS355.LWJGL.StudentLWJGLController;
 
 import static CS355.LWJGL.LWJGLSandbox.DISPLAY_HEIGHT;
@@ -138,13 +139,17 @@ public class CameraController extends StudentLWJGLController {
         this.lookThrough();
 
         // render the "floor" grid
-        Renderer renderer = new WireframeRenderer();
-        renderer.setColor(0.0f, 1.0f, 0.0f);
-        this.gridModel.render(renderer);
+//        Renderer renderer = new WireframeRenderer();
+//        renderer.setColor(0.0f, 1.0f, 0.0f);
+//        this.gridModel.render(renderer);
 
         // render the obj-file model if there is one
         if (null != this.objFileModel) {
-            renderer = new SurfaceRenderer(new FlatShader(new AmbientLightSource()));
+            AmbientLightSource ambient = new AmbientLightSource();
+            DirectionalLightSource directional =
+                    new DirectionalLightSource(new Color(1.0, 1.0, 1.0), new Point3D(1.0, 1.0, 1.0));
+            FlatShader shader = new FlatShader(ambient, directional);
+            Renderer renderer = new SurfaceRenderer(shader);
             renderer.setColor(1.0f, 0.0f, 0.0f);
             this.objFileModel.render(renderer);
         }

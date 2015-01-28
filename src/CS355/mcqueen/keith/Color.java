@@ -8,6 +8,10 @@ public class Color extends Point3D {
         super(min(max(r, 0), 1), min(max(g, 0), 1), min(max(b, 0), 1));
     }
 
+    public Color(Point3D color) {
+        this(color.x, color.y, color.z);
+    }
+
     public double red() {
         return super.x;
     }
@@ -20,13 +24,16 @@ public class Color extends Point3D {
         return super.z;
     }
 
-    public Color times(Color that) {
-        return new Color(this.red() * that.red(), this.green() * that.green(), this.blue() * that.blue());
+    public Color times(Point3D that) {
+        return new Color(this.x * that.x, this.y * that.y, this.z * that.z);
+    }
+
+    @Override
+    public Color times(double scalar) {
+        return new Color(super.times(scalar));
     }
 
     public Color add(Color that) {
-        Point3D sum = super.add(that);
-
-        return new Color(sum.x, sum.y, sum.z);
+        return new Color(super.add(that));
     }
 }

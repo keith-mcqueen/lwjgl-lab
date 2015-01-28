@@ -1,5 +1,7 @@
 package CS355.LWJGL;
 
+import CS355.mcqueen.keith.Color;
+
 /**
  * @author Brennan Smith
  */
@@ -44,5 +46,13 @@ public class Point3D {
                 (this.y * that.z - this.z * that.y),
                 (this.z * that.x - this.x * that.z),
                 (this.x * that.y - this.y * that.x));
+    }
+
+    public double dot(Point3D that) {
+        return (this.x * that.x) + (this.y * that.y) + (this.z * that.z);
+    }
+
+    public Point3D times(double scalar) {
+        return new Point3D(this.x * scalar, this.y * scalar, this.z * scalar);
     }
 }
