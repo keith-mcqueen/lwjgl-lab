@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ObjFileModel extends Model3D {
     private List<Point3D> normals = new ArrayList<>();
-    private List<SimpleModelFace> faces = new ArrayList<>();
+    private List<Triangle3D> triangles = new ArrayList<>();
 
     public ObjFileModel(String objFile) {
         this.parseObjFile(objFile);
@@ -64,15 +64,18 @@ public class ObjFileModel extends Model3D {
         if (tokens.length < 4) {
             throw new IllegalArgumentException("At least 4 tokens expected for face line: " + line);
         }
+        if (tokens.length > 5) {
+            throw new IllegalArgumentException("More than 5 tokens for a face definition is unsupported: " + line);
+        }
 
-        SimpleModelFace face = new SimpleModelFace();
+        ArrayList<Point3D> faceVertices = new ArrayList<>();
         for (int i = 1; i < tokens.length; i++) {
             // split the token into subtokens
             String[] subtokens = tokens[i].split("/");
 
             // get the vertex (represented by the first subtoken)
             int vertexIndex = Integer.valueOf(subtokens[0]);
-            face.addVertex(this.getVertex(vertexIndex - 1));
+            faceVertices.add(this.getVertex(vertexIndex - 1));
 
             // if a vertex normal is represented (the 3rd subtoken), then get that
 //            if (subtokens.length >= 3) {
@@ -81,16 +84,24 @@ public class ObjFileModel extends Model3D {
 //            }
         }
 
-        this.faces.add(face);
+        switch (faceVertices.size()) {
+            case 3:
+                this.triangles.add(new Triangle3D(faceVertices.get(0), faceVertices.get(1), faceVertices.get(2)));
+                break;
+
+            case 4:
+                // we've got a quadrilateral that needs to be broken up into 2 triangles
+                this.triangles.add(new Triangle3D(faceVertices.get(0), faceVertices.get(1), faceVertices.get(3)));
+                this.triangles.add(new Triangle3D(faceVertices.get(1), faceVertices.get(2), faceVertices.get(3)));
+                break;
+
+            default:
+                throw new IllegalArgumentException("Wrong number of vertices in face: " + line);
+        }
     }
 
     @Override
-    public void renderAsWireframe() {
-        this.faces.forEach(SimpleModelFace::renderAsWireframe);
-    }
-
-    @Override
-    public void renderAsSolid() {
-        this.faces.forEach(SimpleModelFace::renderAsSolid);
+    public void render(Renderer renderer) {
+        this.triangles.forEach(t -> renderer.render(t));
     }
 }

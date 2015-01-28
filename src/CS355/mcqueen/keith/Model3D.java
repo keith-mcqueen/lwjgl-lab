@@ -43,7 +43,5 @@ public abstract class Model3D implements Iterable<Point3D> {
         return this.vertices.get(index);
     }
 
-    public abstract void renderAsWireframe();
-
-    public abstract void renderAsSolid();
+    public abstract void render(Renderer renderer);
 }

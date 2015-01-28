@@ -134,22 +134,19 @@ public class CameraController extends StudentLWJGLController {
         // super calls glClear() for us
         super.render();
 
-        // set the color (green)
-//        glColor3f(0.0f, 1.0f, 0.0f);
-
         // update the camera position
         this.lookThrough();
 
         // render the "floor" grid
-        this.gridModel.renderAsWireframe();
+        WireframeRenderer renderer = new WireframeRenderer();
+//        renderer.setColor(0.0f, 1.0f, 0.0f);
+//        this.gridModel.render(renderer);
 
         // render the obj-file model if there is one
         if (null != this.objFileModel) {
-            this.objFileModel.renderAsWireframe();
+            renderer.setColor(1.0f, 0.0f, 0.0f);
+            this.objFileModel.render(renderer);
         }
-
-//        HouseModel2 houseModel = new HouseModel2();
-//        houseModel.renderAsWireframe();
     }
 
     private void lookThrough() {

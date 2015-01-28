@@ -14,20 +14,12 @@ public class GridModel extends Model3D {
     }
 
     @Override
-    public void renderAsWireframe() {
-        Renderer renderer = new LineRenderer();
-        renderer.setColor(0.0f, 1.0f, 0.0f);
-
+    public void render(Renderer renderer) {
         for (int x = this.min; x <= this.max; x += this.step) {
-            renderer.render(new Point3D(x, 0, this.min), new Point3D(x, 0, this.max));
+            renderer.render(new Triangle3D(new Point3D(x, 0, this.min), new Point3D(x, 0, this.max), new Point3D(x, 0, this.max)));
         }
         for (int z = this.min; z <= this.max; z += this.step) {
-            renderer.render(new Point3D(this.min, 0, z), new Point3D(this.max, 0, z));
+            renderer.render(new Triangle3D(new Point3D(this.min, 0, z), new Point3D(this.max, 0, z), new Point3D(this.max, 0, z)));
         }
-    }
-
-    @Override
-    public void renderAsSolid() {
-
     }
 }
