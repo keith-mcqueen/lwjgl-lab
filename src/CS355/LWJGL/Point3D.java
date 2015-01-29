@@ -1,7 +1,5 @@
 package CS355.LWJGL;
 
-import CS355.mcqueen.keith.Color;
-
 /**
  * @author Brennan Smith
  */
@@ -16,8 +14,12 @@ public class Point3D {
         z = newZ;
     }
 
-    double length() {
-        return Math.sqrt(x * x + y * y + z * z);
+    public double length() {
+        return Math.sqrt(this.lengthSquared());
+    }
+
+    public double lengthSquared() {
+        return x * x + y * y + z * z;
     }
 
     @Override

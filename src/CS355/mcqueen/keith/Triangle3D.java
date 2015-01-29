@@ -43,9 +43,9 @@ public class Triangle3D extends Model3D {
 
     private Point3D computeNormal() {
         // the normal is computed by getting vectors for two edges, and normalizing their cross-product
-        Point3D ab = this.getVertex(0).subtract(this.getVertex(1));
-        Point3D ac = this.getVertex(0).subtract(this.getVertex(2));
+        Point3D ab = this.getVertex(1).subtract(this.getVertex(0));
+        Point3D ac = this.getVertex(2).subtract(this.getVertex(0));
 
-        return ab.cross(ac).normalize();
+        return this.normal = ab.cross(ac).normalize();
     }
 }

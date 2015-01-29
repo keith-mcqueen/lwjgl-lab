@@ -145,12 +145,23 @@ public class CameraController extends StudentLWJGLController {
 
         // render the obj-file model if there is one
         if (null != this.objFileModel) {
-            AmbientLightSource ambient = new AmbientLightSource();
-            DirectionalLightSource directional =
-                    new DirectionalLightSource(new Color(1.0, 1.0, 1.0), new Point3D(1.0, 1.0, 1.0));
-            FlatShader shader = new FlatShader(ambient, directional);
+            // ambient light source
+            AmbientLightSource a = new AmbientLightSource(new Color(0.4, 0.4, 0.4));
+
+            // directional light source
+            DirectionalLightSource d = new DirectionalLightSource(new Color(0.4, 0.4, 0.4), new Point3D(1.0, 1.0, 1.0));
+
+            // point light source(s)
+            PointLightSource p1 = new PointLightSource(new Color(6.0, 0.0, 0.0), new Point3D(80.0, 80.0, 80.0));
+            PointLightSource p2 = new PointLightSource(new Color(0.0, 6.0, 0.0), new Point3D(-80.0, -80.0, -80.0));
+            PointLightSource p3 = new PointLightSource(new Color(0.0, 0.0, 6.0), new Point3D(0.0, 80.0, 80.0));
+
+            // shader
+            FlatShader shader = new FlatShader(a, d, p1, p2, p3);
+
+            // renderer
             Renderer renderer = new SurfaceRenderer(shader);
-            renderer.setColor(1.0f, 0.0f, 0.0f);
+            renderer.setColor(1.0f, 1.0f, 1.0f);
             this.objFileModel.render(renderer);
         }
     }

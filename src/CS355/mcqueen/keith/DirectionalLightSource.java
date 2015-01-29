@@ -6,6 +6,10 @@ import static java.lang.Math.max;
 public class DirectionalLightSource extends LightSource {
     private final Point3D direction;
 
+    public DirectionalLightSource(Point3D direction) {
+        this(0.5f, 0.5f, 0.5f, direction);
+    }
+
     public DirectionalLightSource(float r, float g, float b, Point3D direction) {
         this(new Color(r, g, b), direction);
     }
