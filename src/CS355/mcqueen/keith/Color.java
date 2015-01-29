@@ -24,6 +24,7 @@ public class Color extends Point3D {
         return super.z;
     }
 
+    @Override
     public Color times(Point3D that) {
         return new Color(this.x * that.x, this.y * that.y, this.z * that.z);
     }
@@ -33,7 +34,8 @@ public class Color extends Point3D {
         return new Color(super.times(scalar));
     }
 
-    public Color add(Color that) {
+    @Override
+    public Color add(Point3D that) {
         return new Color(super.add(that));
     }
 }

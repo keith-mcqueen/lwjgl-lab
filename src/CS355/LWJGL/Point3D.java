@@ -4,9 +4,9 @@ package CS355.LWJGL;
  * @author Brennan Smith
  */
 public class Point3D {
-    public final double x;
-    public final double y;
-    public final double z;
+    public  double x;
+    public  double y;
+    public  double z;
 
     public Point3D(double newX, double newY, double newZ) {
         x = newX;
@@ -56,5 +56,9 @@ public class Point3D {
 
     public Point3D times(double scalar) {
         return new Point3D(this.x * scalar, this.y * scalar, this.z * scalar);
+    }
+
+    public Point3D times(Point3D that) {
+        return new Point3D(this.x * that.x, this.y * that.y, this.z * that.z);
     }
 }
