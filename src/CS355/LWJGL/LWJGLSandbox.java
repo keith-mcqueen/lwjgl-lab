@@ -42,7 +42,7 @@ public class LWJGLSandbox {
         //Display
         Display.setDisplayMode(new DisplayMode(DISPLAY_WIDTH, DISPLAY_HEIGHT));
         Display.setFullscreen(false);
-        Display.setTitle("CS355 LWJGL Framework - BYU");
+        Display.setTitle("CS455 LWJGL Framework - BYU");
         Display.create();
 
         //Keyboard

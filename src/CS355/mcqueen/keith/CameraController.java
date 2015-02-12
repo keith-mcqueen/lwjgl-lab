@@ -2,6 +2,9 @@ package CS355.mcqueen.keith;
 
 import CS355.LWJGL.Point3D;
 import CS355.LWJGL.StudentLWJGLController;
+import org.lwjgl.opengl.Display;
+
+import java.text.MessageFormat;
 
 import static CS355.LWJGL.LWJGLSandbox.DISPLAY_HEIGHT;
 import static CS355.LWJGL.LWJGLSandbox.DISPLAY_WIDTH;
@@ -25,7 +28,7 @@ public class CameraController extends StudentLWJGLController {
     public static final float INITIAL_Y = -3.0f;
     public static final float INITIAL_Z = -20.0f;
 
-    public static final float WALK_DISTANCE = 1.0f;
+    public static final float WALK_DISTANCE = 0.1f;
     public static final float ROTATION_ANGLE = 1.0f;
     public static final double _90_DEGREES = 90;
 
@@ -38,16 +41,37 @@ public class CameraController extends StudentLWJGLController {
     private float yaw = 0.0f;
 
     private final GridModel gridModel = new GridModel(-100, 100, 10);
-    private Model3D objFileModel;
+    private Model3D model;
     private Renderer renderer;
+    private int numSlices = 2;
+    private Axis sliceAxis = Axis.Y;
+    private AbstractFileModel inputModel;
 
     public CameraController(String[] args) {
         if (args.length > 0) {
-            this.objFileModel = new ObjFileModel(args[0]);
+            String modelFile = args[0];
+            if (modelFile.endsWith(".obj")) {
+                this.inputModel = new ObjFileModel(modelFile);
+            } else if (modelFile.endsWith(".stl")) {
+                this.inputModel = new StlFileModel(modelFile);
+            }
+
+            this.model = new SlicedModel(this.inputModel, this.sliceAxis, this.numSlices);
+//            this.model = fileModel;
         }
     }
 
     private void init() {
+//        this.initSurfaceRenderer();
+        this.initWireframeRenderer();
+    }
+
+    private void initWireframeRenderer() {
+        this.renderer = new WireframeRenderer(false);
+        this.renderer.setColor(0.0f, 1.0f, 0.0f);
+    }
+
+    private void initSurfaceRenderer() {
         // ambient light source
         AmbientLightSource a = new AmbientLightSource(new Color(0.4, 0.4, 0.4));
 
@@ -60,13 +84,13 @@ public class CameraController extends StudentLWJGLController {
         PointLightSource p3 = new PointLightSource(new Color(0.0, 0.0, 6.0), new Point3D(0.0, 80.0, 80.0));
 
         // moving point light sources
-        MovingPointLightSource m1 = new MovingPointLightSource(new Color(1.0, 0.0, 0.0), new Point3D(0.0, 0.0, 0.0));
-        MovingPointLightSource m2 = new MovingPointLightSource(new Color(0.0, 1.0, 0.0), new Point3D(0.0, 0.0, 0.0));
-        MovingPointLightSource m3 = new MovingPointLightSource(new Color(1.0, 0.0, 1.0), new Point3D(0.0, 0.0, 0.0));
+//        MovingPointLightSource m1 = new MovingPointLightSource(new Color(0.6, 0.0, 0.0), new Point3D(0.0, 0.0, 0.0));
+//        MovingPointLightSource m2 = new MovingPointLightSource(new Color(0.0, 0.6, 0.0), new Point3D(0.0, 0.0, 0.0));
+//        MovingPointLightSource m3 = new MovingPointLightSource(new Color(0.0, 0.0, 0.6), new Point3D(0.0, 0.0, 0.0));
 
         // shader
-//            FlatShader shader = new FlatShader(a, d, p1, p2, p3, m1);
-        FlatShader shader = new FlatShader(a, d, p1, p2, p3, m1, m2, m3);
+//        FlatShader shader = new FlatShader(a, d, p1, p2, p3, m1, m2, m3);
+        FlatShader shader = new FlatShader(a, d, p1, p2, p3);
 
         // renderer
         this.renderer = new SurfaceRenderer(shader);
@@ -154,7 +178,22 @@ public class CameraController extends StudentLWJGLController {
             this.z = INITIAL_Z;
             this.yaw = 0.0f;
 
+        } else if (isKeyDown(KEY_EQUALS)) {
+            this.model = new SlicedModel(this.inputModel, this.sliceAxis, ++this.numSlices);
+        } else if (isKeyDown(KEY_MINUS)) {
+            this.model = new SlicedModel(this.inputModel, this.sliceAxis, --this.numSlices);
+        } else if (isKeyDown(KEY_X)) {
+            this.sliceAxis = Axis.X;
+            this.model = new SlicedModel(this.inputModel, this.sliceAxis, this.numSlices);
+        } else if (isKeyDown(KEY_Y)) {
+            this.sliceAxis = Axis.Y;
+            this.model = new SlicedModel(this.inputModel, this.sliceAxis, this.numSlices);
+        } else if (isKeyDown(KEY_Z)) {
+            this.sliceAxis = Axis.Z;
+            this.model = new SlicedModel(this.inputModel, this.sliceAxis, this.numSlices);
         }
+
+        Display.setTitle(MessageFormat.format("BYU CS 455: Slice axis: {0}; Slices: {1}", this.sliceAxis, this.numSlices + 1));
     }
 
     @Override
@@ -170,13 +209,11 @@ public class CameraController extends StudentLWJGLController {
         this.lookThrough();
 
         // render the "floor" grid
-//        Renderer renderer = new WireframeRenderer();
-//        renderer.setColor(0.0f, 1.0f, 0.0f);
 //        this.gridModel.render(renderer);
 
         // render the obj-file model if there is one
-        if (null != this.objFileModel) {
-            this.objFileModel.render(this.renderer);
+        if (null != this.model) {
+            this.model.render(this.renderer);
         }
     }
 

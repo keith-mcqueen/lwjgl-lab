@@ -7,6 +7,10 @@ import java.util.List;
 import static org.lwjgl.opengl.GL11.*;
 
 public class WireframeRenderer extends Renderer {
+    public WireframeRenderer(boolean enableDepthTesting) {
+        super(enableDepthTesting);
+    }
+
     @Override
     public void render(Triangle3D triangle) {
         // get the vertices from the triangle

@@ -4,27 +4,28 @@ import CS355.LWJGL.Point3D;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 
-public class ObjFileModel extends Model3D {
-    private List<Point3D> normals = new ArrayList<>();
-    private List<Triangle3D> triangles = new ArrayList<>();
+public class ObjFileModel extends AbstractFileModel {
 
     public ObjFileModel(String objFile) {
-        this.parseObjFile(objFile);
+        super(objFile);
+
+        this.parseFile(objFile);
     }
 
-    private void parseObjFile(String objFile) {
-        try {
-            Files.lines(Paths.get(objFile)).forEach(this::handleObjLine);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    protected boolean isValidFile(String file) {
+        Path filePath = Paths.get(file);
+        String name = filePath.toFile().getName();
+
+        return name.endsWith(".obj");
     }
 
-    private void handleObjLine(String line) {
+    @Override
+    protected void handleLine(String line) {
         // split the line into tokens
         String[] tokens = line.split(" ");
 
@@ -43,7 +44,6 @@ public class ObjFileModel extends Model3D {
                 break;
         }
     }
-
     private void handleVertexLine(String line, String... tokens) {
         if (tokens.length < 4) {
             throw new IllegalArgumentException("At least 4 tokens expected for vertex line: " + line);
@@ -57,7 +57,7 @@ public class ObjFileModel extends Model3D {
             throw new IllegalArgumentException("At least 4 tokens expected for vertex-normal line: " + line);
         }
 
-        this.normals.add(new Point3D(Double.valueOf(tokens[1]), Double.valueOf(tokens[2]), Double.valueOf(tokens[3])));
+//        this.normals.add(new Point3D(Double.valueOf(tokens[1]), Double.valueOf(tokens[2]), Double.valueOf(tokens[3])));
     }
 
     private void handleFaceLine(String line, String... tokens) {
@@ -86,13 +86,13 @@ public class ObjFileModel extends Model3D {
 
         switch (faceVertices.size()) {
             case 3:
-                this.triangles.add(new Triangle3D(faceVertices.get(0), faceVertices.get(1), faceVertices.get(2)));
+                this.addTriangle(new Triangle3D(faceVertices.get(0), faceVertices.get(1), faceVertices.get(2)));
                 break;
 
             case 4:
                 // we've got a quadrilateral that needs to be broken up into 2 triangles
-                this.triangles.add(new Triangle3D(faceVertices.get(0), faceVertices.get(1), faceVertices.get(3)));
-                this.triangles.add(new Triangle3D(faceVertices.get(1), faceVertices.get(2), faceVertices.get(3)));
+                this.addTriangle(new Triangle3D(faceVertices.get(0), faceVertices.get(1), faceVertices.get(3)));
+                this.addTriangle(new Triangle3D(faceVertices.get(1), faceVertices.get(2), faceVertices.get(3)));
                 break;
 
             default:
@@ -100,8 +100,4 @@ public class ObjFileModel extends Model3D {
         }
     }
 
-    @Override
-    public void render(Renderer renderer) {
-        this.triangles.forEach(t -> renderer.render(t));
-    }
 }

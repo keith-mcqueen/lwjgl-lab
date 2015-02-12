@@ -8,11 +8,9 @@ public class SurfaceRenderer extends Renderer {
     private Shader shader;
 
     public SurfaceRenderer(Shader shader) {
-        this.shader = shader;
+        super(true);
 
-        // configure the depth (Z) buffer
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LEQUAL);
+        this.shader = shader;
     }
 
     @Override
