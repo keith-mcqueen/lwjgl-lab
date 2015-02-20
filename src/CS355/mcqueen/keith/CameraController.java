@@ -33,9 +33,7 @@ public class CameraController extends StudentLWJGLController {
     public static final double _90_DEGREES = 90;
 
     // position of the camera (really the world)
-    private float x = INITIAL_X;
-    private float y = INITIAL_Y;
-    private float z = INITIAL_Z;
+    private Camera camera = new Camera(INITIAL_X, INITIAL_Y, INITIAL_Z);
 
     // orientation of the camera (the world, really) about the Y axis in radians
     private float yaw = 0.0f;
@@ -173,9 +171,9 @@ public class CameraController extends StudentLWJGLController {
         } else if (isKeyDown(KEY_H)) {
 
             // reset back to the original state
-            this.x = INITIAL_X;
-            this.y = INITIAL_Y;
-            this.z = INITIAL_Z;
+            this.camera.x = INITIAL_X;
+            this.camera.y = INITIAL_Y;
+            this.camera.z = INITIAL_Z;
             this.yaw = 0.0f;
 
         } else if (isKeyDown(KEY_EQUALS)) {
@@ -222,34 +220,34 @@ public class CameraController extends StudentLWJGLController {
         glLoadIdentity();
 
         // translate
-        glTranslatef(this.x, this.y, this.z);
+        glTranslated(this.camera.x, this.camera.y, this.camera.z);
 
         // rotate about the y axis
         glRotatef(this.yaw, 0.0f, 1.0f, 0.0f);
     }
 
     private void forward(float distance) {
-        this.x -= distance * (float) sin(toRadians(this.yaw));
-        this.z += distance * (float) cos(toRadians(this.yaw));
+        this.camera.x -= distance * (float) sin(toRadians(this.yaw));
+        this.camera.z += distance * (float) cos(toRadians(this.yaw));
     }
 
     private void back(float distance) {
-        this.x += distance * (float) sin(toRadians(this.yaw));
-        this.z -= distance * (float) cos(toRadians(this.yaw));
+        this.camera.x += distance * (float) sin(toRadians(this.yaw));
+        this.camera.z -= distance * (float) cos(toRadians(this.yaw));
     }
 
     private void left(float distance) {
-        this.x -= distance * (float) sin(toRadians(this.yaw - _90_DEGREES));
-        this.z += distance * (float) cos(toRadians(this.yaw - _90_DEGREES));
+        this.camera.x -= distance * (float) sin(toRadians(this.yaw - _90_DEGREES));
+        this.camera.z += distance * (float) cos(toRadians(this.yaw - _90_DEGREES));
     }
 
     private void right(float distance) {
-        this.x -= distance * (float) sin(toRadians(this.yaw + _90_DEGREES));
-        this.z += distance * (float) cos(toRadians(this.yaw + _90_DEGREES));
+        this.camera.x -= distance * (float) sin(toRadians(this.yaw + _90_DEGREES));
+        this.camera.z += distance * (float) cos(toRadians(this.yaw + _90_DEGREES));
     }
 
     private void fly(float distance) {
-        this.y += distance;
+        this.camera.y += distance;
     }
 
     private void turn(float amount) {

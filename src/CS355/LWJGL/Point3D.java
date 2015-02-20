@@ -1,17 +1,23 @@
 package CS355.LWJGL;
 
+import java.text.DecimalFormat;
+
 /**
  * @author Brennan Smith
  */
 public class Point3D {
+    public static final String DEFAULT_FORMAT = "(%2$s, %3$s, %4$s)";
+
     public  double x;
     public  double y;
     public  double z;
 
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.###");
+
     public Point3D(double newX, double newY, double newZ) {
-        x = newX;
-        y = newY;
-        z = newZ;
+        this.x = newX;
+        this.y = newY;
+        this.z = newZ;
     }
 
     public double length() {
@@ -24,7 +30,12 @@ public class Point3D {
 
     @Override
     public String toString() {
-        return "X: " + x + ", Y: " + y + ", Z:" + z;
+        return this.toString(DEFAULT_FORMAT);
+    }
+
+    public String toString(String format) {
+        return String.format(format, this.getClass().getSimpleName(),
+                DECIMAL_FORMAT.format(this.x), DECIMAL_FORMAT.format(this.y), DECIMAL_FORMAT.format(this.z));
     }
 
     public Point3D normalize() {
@@ -60,5 +71,16 @@ public class Point3D {
 
     public Point3D times(Point3D that) {
         return new Point3D(this.x * that.x, this.y * that.y, this.z * that.z);
+    }
+
+    public static void main(String[] args) {
+        Point3D a = new Point3D(-5, 18, 12);
+        Point3D b = new Point3D(1, 0, 1);
+
+        double dotProduct = a.dot(b);
+
+        System.out.println("a = " + a);
+        System.out.println("b = " + b);
+        System.out.println("dotProduct = " + dotProduct);
     }
 }
