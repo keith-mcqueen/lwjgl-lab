@@ -9,6 +9,11 @@ import java.util.List;
 
 public abstract class Model3D {
     private List<Point3D> vertices = new ArrayList<>();
+    private Color color;
+
+    protected Model3D(Color color) {
+        this.color = color;
+    }
 
 //    @Override
 //    public Iterator<Point3D> iterator() {
@@ -64,4 +69,12 @@ public abstract class Model3D {
     public void clearVertices() {
         this.vertices.clear();
     }
+
+    public abstract Point3D getPointOfIntersection(Point3D origin, Point3D ray);
+
+    public Color getColor() {
+        return this.color;
+    }
+
+    public abstract Point3D getNormal(Point3D point);
 }

@@ -4,6 +4,8 @@ import CS355.LWJGL.Point3D;
 
 import java.text.DecimalFormat;
 import java.util.Random;
+import static CS355.LWJGL.Point3D.randomPoint;
+import static CS355.mcqueen.keith.Color.randomColor;
 
 public class SphereModel extends Model3D {
     public static final int VERBOSENESS_NONE = 0;
@@ -16,11 +18,17 @@ public class SphereModel extends Model3D {
     private final Point3D center;
     private final double radius;
 
-    public SphereModel(double centerX, double centerY, double centerZ, double radius) {
-        this(new Point3D(centerX, centerY, centerZ), radius);
+    public static SphereModel randomSphere() {
+        return new SphereModel(randomPoint(100.0d), 10.0d, randomColor());
     }
 
-    public SphereModel(Point3D center, double radius) {
+    public SphereModel(double centerX, double centerY, double centerZ, double radius, Color color) {
+        this(new Point3D(centerX, centerY, centerZ), radius, color);
+    }
+
+    public SphereModel(Point3D center, double radius, Color color) {
+        super(color);
+
         this.center = center;
         this.radius = radius;
     }
@@ -32,6 +40,20 @@ public class SphereModel extends Model3D {
 
     public String toString() {
         return "Sphere with radius " + this.radius + ", centered at " + this.center;
+    }
+
+    @Override
+    public Point3D getPointOfIntersection(Point3D origin, Point3D ray) {
+        return this.getPointOfIntersection(origin, ray, VERBOSENESS_NONE);
+    }
+
+    @Override
+    public Point3D getNormal(Point3D point) {
+        if (null == point) {
+            throw new IllegalArgumentException("Point must not be null");
+        }
+
+        return point.subtract(this.center).normalize();
     }
 
     private Point3D getPointOfIntersection(Point3D r_o, Point3D r_d, int verboseness) {
@@ -329,12 +351,13 @@ public class SphereModel extends Model3D {
         int bound = 11;
 
         // initialize the camera
-        Camera camera = new Camera(random.nextInt(bound), random.nextInt(bound), random.nextInt(bound));
+        Camera camera = new Camera(random.nextInt(bound), random.nextInt(bound), random.nextInt(bound), 1.0d);
 //        Camera camera = new Camera(5.0d, 0.0d, 6.0d);
 
         // initialize the scene
-        SphereModel sphere = new SphereModel(random.nextInt(bound), random.nextInt(bound), random.nextInt(bound), random.nextInt(bound));
+//        SphereModel sphere = new SphereModel(random.nextInt(bound), random.nextInt(bound), random.nextInt(bound), random.nextInt(bound));
 //        SphereModel sphere = new SphereModel(0.0d, 18.0d, 18.0d, 15.0d);
+        SphereModel sphere = SphereModel.randomSphere();
 
         // initialize a ray
         Point3D ray = new Point3D(random.nextInt(2), random.nextInt(2), random.nextInt(2));

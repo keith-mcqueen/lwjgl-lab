@@ -11,6 +11,8 @@ public class Slice3D extends TriangleModel {
     private final double slicePlane;
 
     public Slice3D(TriangleModel originalModel, Axis axis, double slicePlane) {
+        super(null);
+
         this.originalModel = originalModel;
         this.axis = axis;
         this.slicePlane = slicePlane;

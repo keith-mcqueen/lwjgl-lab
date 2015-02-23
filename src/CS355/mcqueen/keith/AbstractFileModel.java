@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 
 public abstract class AbstractFileModel extends TriangleModel {
     public AbstractFileModel(String file) {
+        super(null);
+
         if (!this.isValidFile(file)) {
             throw new IllegalArgumentException("Invalid file: " + file);
         }

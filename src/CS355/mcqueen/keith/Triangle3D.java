@@ -9,6 +9,8 @@ public class Triangle3D extends Model3D {
     private Point3D normal;
 
     public Triangle3D(Point3D pointA, Point3D pointB, Point3D pointC) {
+        super(null);
+
         super.addVertex(pointA);
         super.addVertex(pointB);
         super.addVertex(pointC);
@@ -17,6 +19,16 @@ public class Triangle3D extends Model3D {
     @Override
     public void render(Renderer renderer) {
         renderer.render(this);
+    }
+
+    @Override
+    public Point3D getPointOfIntersection(Point3D origin, Point3D ray) {
+        return null;
+    }
+
+    @Override
+    public Point3D getNormal(Point3D point) {
+        return this.normal;
     }
 
     public Point3D getCentroid() {

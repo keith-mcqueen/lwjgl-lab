@@ -8,6 +8,8 @@ public class GridModel extends Model3D {
     private int step;
 
     public GridModel(int min, int max, int step) {
+        super(null);
+
         this.min = min;
         this.max = max;
         this.step = step;
@@ -21,5 +23,15 @@ public class GridModel extends Model3D {
         for (int z = this.min; z <= this.max; z += this.step) {
             renderer.render(new Triangle3D(new Point3D(this.min, 0, z), new Point3D(this.max, 0, z), new Point3D(this.max, 0, z)));
         }
+    }
+
+    @Override
+    public Point3D getPointOfIntersection(Point3D origin, Point3D ray) {
+        return null;
+    }
+
+    @Override
+    public Point3D getNormal(Point3D point) {
+        return null;
     }
 }

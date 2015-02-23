@@ -1,18 +1,26 @@
 package CS355.LWJGL;
 
 import java.text.DecimalFormat;
+import java.util.Random;
 
 /**
  * @author Brennan Smith
  */
 public class Point3D {
     public static final String DEFAULT_FORMAT = "(%2$s, %3$s, %4$s)";
+    protected static final Random RANDOM = new Random(System.currentTimeMillis());
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("####.###");
 
     public  double x;
     public  double y;
     public  double z;
 
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.###");
+    public static Point3D randomPoint(double scale) {
+        return new Point3D(
+                RANDOM.nextDouble() * scale * (RANDOM.nextInt(2) == 0 ? -1 : 1),
+                RANDOM.nextDouble() * scale * (RANDOM.nextInt(2) == 0 ? -1 : 1),
+                RANDOM.nextDouble() * scale * (RANDOM.nextInt(2) == 0 ? -1 : 1));
+    }
 
     public Point3D(double newX, double newY, double newZ) {
         this.x = newX;

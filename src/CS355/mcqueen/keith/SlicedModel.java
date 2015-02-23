@@ -1,5 +1,7 @@
 package CS355.mcqueen.keith;
 
+import CS355.LWJGL.Point3D;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,8 @@ public class SlicedModel extends Model3D {
     private List<Slice3D> slices = new ArrayList<>();
 
     public SlicedModel(TriangleModel originalModel, Axis axis, int numSlices) {
+        super(null);
+
         this.originalModel = originalModel;
 
         this.computeSlices(axis, numSlices);
@@ -35,5 +39,15 @@ public class SlicedModel extends Model3D {
 //        renderer.setColor(0.0f, 1.0f, 0.0f);
 //        this.originalModel.render(renderer);
         this.slices.forEach(s -> s.render(renderer));
+    }
+
+    @Override
+    public Point3D getPointOfIntersection(Point3D origin, Point3D ray) {
+        return null;
+    }
+
+    @Override
+    public Point3D getNormal(Point3D point) {
+        return null;
     }
 }

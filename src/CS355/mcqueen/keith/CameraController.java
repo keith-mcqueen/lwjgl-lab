@@ -33,7 +33,7 @@ public class CameraController extends StudentLWJGLController {
     public static final double _90_DEGREES = 90;
 
     // position of the camera (really the world)
-    private Camera camera = new Camera(INITIAL_X, INITIAL_Y, INITIAL_Z);
+    private Camera camera = new Camera(INITIAL_X, INITIAL_Y, INITIAL_Z, Z_NEAR);
 
     // orientation of the camera (the world, really) about the Y axis in radians
     private float yaw = 0.0f;
