@@ -4,15 +4,26 @@ import CS355.LWJGL.Point3D;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public abstract class Model3D {
-    private List<Point3D> vertices = new ArrayList<>();
-    private Color color;
+    private final List<Point3D> vertices = new ArrayList<>();
+    private final Color color;
+    private final double specularExponent;
+    private final Color specularColor;
 
     protected Model3D(Color color) {
+        this(color, 32.0);
+    }
+
+    protected Model3D(Color color, double specularExponent) {
+        this(color, specularExponent, new Color(1.0));
+    }
+
+    protected Model3D(Color color, double specularExponent, Color specularColor) {
         this.color = color;
+        this.specularExponent = specularExponent;
+        this.specularColor = specularColor;
     }
 
 //    @Override
@@ -77,4 +88,12 @@ public abstract class Model3D {
     }
 
     public abstract Point3D getNormal(Point3D point);
+
+    public double getSpecularExponent() {
+        return this.specularExponent;
+    }
+
+    public Color getSpecularColor() {
+        return this.specularColor;
+    }
 }

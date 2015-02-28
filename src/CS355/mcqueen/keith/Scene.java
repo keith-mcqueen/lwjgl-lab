@@ -18,7 +18,7 @@ public class Scene implements Iterable<Model3D> {
 
     public void addModel(Model3D model) {
         this.models.add(model);
-        System.out.println("model = " + model);
+//        System.out.println("model = " + model);
     }
 
     public void removeModel(Model3D model) {

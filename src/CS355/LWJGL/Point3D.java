@@ -15,6 +15,10 @@ public class Point3D {
     public  double y;
     public  double z;
 
+    public Point3D(double value) {
+        this(value, value, value);
+    }
+
     public static Point3D randomPoint(double scale) {
         return new Point3D(
                 RANDOM.nextDouble() * scale * (RANDOM.nextInt(2) == 0 ? -1 : 1),

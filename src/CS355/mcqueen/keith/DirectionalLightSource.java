@@ -20,7 +20,17 @@ public class DirectionalLightSource extends LightSource {
     }
 
     @Override
-    public Color getColorFor(Point3D location, Point3D normal, Color reflectiveColor) {
-        return reflectiveColor.times(this.getColor()).times(max(0.0d, normal.dot(this.direction)));
+    public Color getColorFor(Model3D model, Point3D location, Point3D eyeLocation) {
+        Color baseColor = model.getColor();
+        if (null == baseColor) {
+            return new Color(0.0);
+        }
+
+        Point3D normal = model.getNormal(location);
+        if (null == normal) {
+            normal = new Point3D(0.0);
+        }
+
+        return baseColor.times(this.getColor()).times(max(0.0d, normal.dot(this.direction)));
     }
 }

@@ -4,10 +4,14 @@ import CS355.LWJGL.Point3D;
 
 public class AmbientLightSource extends LightSource {
     public AmbientLightSource() {
-        this(0.5f, 0.5f, 0.5f);
+        this(0.5);
     }
 
-    public AmbientLightSource(float r, float g, float b) {
+    public AmbientLightSource(double val) {
+        this(val, val, val);
+    }
+
+    public AmbientLightSource(double r, double g, double b) {
         this(new Color(r, g, b));
     }
 
@@ -16,7 +20,12 @@ public class AmbientLightSource extends LightSource {
     }
 
     @Override
-    public Color getColorFor(Point3D location, Point3D normal, Color reflectiveColor) {
-        return reflectiveColor.times(this.getColor());
+    public Color getColorFor(Model3D model, Point3D location, Point3D eyeLocation) {
+        Color modelColor = model.getColor();
+        if (null == modelColor) {
+            return new Color(0.0);
+        }
+
+        return modelColor.times(this.getColor());
     }
 }

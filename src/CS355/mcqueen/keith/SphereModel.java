@@ -179,7 +179,8 @@ public class SphereModel extends Model3D {
         }
 
         // Step 2 - Find the closest approach of the r_d to the sphere's center
-        double t_ca = OC.dot(r_d);
+//        double t_ca = OC.dot(r_d);
+        double t_ca = OC.dot(r_d_normalized);
 
         switch (verboseness) {
             case VERBOSENESS_HIGH:

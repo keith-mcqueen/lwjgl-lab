@@ -5,6 +5,10 @@ import CS355.LWJGL.Point3D;
 import static java.lang.Math.*;
 
 public class Color extends Point3D {
+    public Color(double value) {
+        this(value, value, value);
+    }
+
     public static Color randomColor() {
         return new Color(RANDOM.nextDouble(), RANDOM.nextDouble(), RANDOM.nextDouble());
     }

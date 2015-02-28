@@ -13,7 +13,7 @@ public abstract class LightSource {
         this.color = color;
     }
 
-    public abstract Color getColorFor(Point3D location, Point3D normal, Color reflectiveColor);
+    public abstract Color getColorFor(Model3D model, Point3D location, Point3D eyeLocation);
 
     protected Color getColor() {
         return this.color;

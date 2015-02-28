@@ -6,11 +6,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
+import static CS355.mcqueen.keith.Color.randomColor;
 import static CS355.LWJGL.Point3D.randomPoint;
-import static CS355.mcqueen.keith.SphereModel.randomSphere;
 
 public class RayTracer {
     private final Scene scene;
@@ -50,43 +48,38 @@ public class RayTracer {
         Point3D s = new Point3D(u, v, w);
         Point3D ray = s.subtract(this.camera).normalize();
 
-        Map<Point3D, Model3D> modelObjectsByIntersectionPoint = new HashMap<>();
-
         // check to see if any of the models in the scene are intersected with the ray
+        Point3D nearestPOI = null;
+        double distance = Double.MAX_VALUE;
+        Model3D modelObject = null;
         for (Model3D obj : this.scene) {
             Point3D point = obj.getPointOfIntersection(this.camera, ray);
             if (null != point) {
-                modelObjectsByIntersectionPoint.put(point, obj);
+                if (null == nearestPOI) {
+                    nearestPOI = point;
+                    distance = point.subtract(this.camera).lengthSquared();
+                    modelObject = obj;
+                    continue;
+                }
+
+                double d2 = point.subtract(this.camera).lengthSquared();
+                if (d2 < distance) {
+                    nearestPOI = point;
+                    distance = d2;
+                    modelObject = obj;
+                }
             }
         }
 
         // if there were no intersections, then just return the scene's background color
-        if (modelObjectsByIntersectionPoint.isEmpty()) {
+        if (null == nearestPOI) {
             return this.scene.getBackgroundColor();
         }
 
-        // get the intersection point nearest to the camera
-        Point3D nearestPOI = null;
-        double distance = Double.MAX_VALUE;
-        for (Point3D point : modelObjectsByIntersectionPoint.keySet()) {
-            if (null == nearestPOI) {
-                nearestPOI = point;
-                distance = point.subtract(this.camera).lengthSquared();
-                continue;
-            }
-
-            double d2 = point.subtract(this.camera).lengthSquared();
-            if (d2 < distance) {
-                nearestPOI = point;
-                distance = d2;
-            }
-        }
-
         // compute the final color (starting with black)
-        Model3D modelObject = modelObjectsByIntersectionPoint.get(nearestPOI);
         Color finalColor = new Color(0.0, 0.0, 0.0);
         for (LightSource light : this.scene.getLights()) {
-            finalColor = finalColor.add(light.getColorFor(nearestPOI, modelObject.getNormal(nearestPOI), modelObject.getColor()));
+            finalColor = finalColor.add(light.getColorFor(modelObject, nearestPOI, this.camera));
         }
 
         return finalColor;
@@ -97,17 +90,17 @@ public class RayTracer {
         Camera camera = new Camera(2.0d);
 
         // set up the scene
-        Scene scene = new Scene(SCREEN_WIDTH, SCREEN_HEIGHT, new Color(0.2, 0.2, 0.2));
+        Scene scene = new Scene(SCREEN_WIDTH, SCREEN_HEIGHT, new Color(0.2));
 
         // add some spheres at random locations
-        scene.addModel(randomSphere());
-        scene.addModel(randomSphere());
-        scene.addModel(randomSphere());
-        scene.addModel(randomSphere());
-        scene.addModel(randomSphere());
-        scene.addModel(randomSphere());
-        scene.addModel(randomSphere());
-        scene.addModel(randomSphere());
+//        scene.addModel(randomSphere());
+//        scene.addModel(randomSphere());
+//        scene.addModel(randomSphere());
+//        scene.addModel(randomSphere());
+//        scene.addModel(randomSphere());
+//        scene.addModel(randomSphere());
+//        scene.addModel(randomSphere());
+//        scene.addModel(randomSphere());
 
         // add some regularly placed spheres
 //        scene.addModel(new SphereModel(new Point3D(25.0, 0.0d, -100.0d), 10.0d, randomColor()));
@@ -122,8 +115,14 @@ public class RayTracer {
 //        scene.addModel(new SphereModel(new Point3D(-25.0, 0.0d, -500.0d), 10.0d, randomColor()));
 
         // add some light sources
-        scene.addLight(new DirectionalLightSource(new Color(1.0, 1.0, 1.0), randomPoint( 1.0d)));
-        scene.addLight(new AmbientLightSource(0.25f, 0.25f, 0.25f));
+//        scene.addLight(new PointLightSource(new Point3D(0.0, 50.0, -150.0)));
+//        scene.addLight(new AmbientLightSource(0.25));
+//        scene.addLight(new AmbientLightSource(0.25));
+
+        // single sphere with light directly above the camera
+        scene.addModel(new SphereModel(new Point3D(0.0, 0.0, -50.0), 10.0, randomColor()));
+        scene.addLight(new PointLightSource(new Point3D(0.0, 100.0, 0.0)));
+        scene.addLight(new AmbientLightSource(0.25));
 
         // create the ray tracer
         RayTracer tracer = new RayTracer(camera, scene);
@@ -134,6 +133,7 @@ public class RayTracer {
 
         // render the scene to an image
         for (int row = 0; row < SCREEN_HEIGHT; row++) {
+            System.out.println("Processing row " + row);
             for (int col = 0; col < SCREEN_WIDTH; col++) {
                 // trace a ray through the current pixel (to get the color for that pixel)
                 Color p = tracer.trace(row, col);
