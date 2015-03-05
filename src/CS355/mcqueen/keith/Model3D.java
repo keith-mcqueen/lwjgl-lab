@@ -5,25 +5,22 @@ import CS355.LWJGL.Point3D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import static java.lang.Math.min;
+import static java.lang.Math.max;
 
 public abstract class Model3D {
     private final List<Point3D> vertices = new ArrayList<>();
     private final Color color;
-    private final double specularExponent;
-    private final Color specularColor;
+    private final Point3D location;
+    private double specularExponent = 64.0;
+    private Color specularColor = new Color(1.0);
+    private double reflectivity;
+    private double transmissivity;
+    private double indexOfRefraction;
 
-    protected Model3D(Color color) {
-        this(color, 32.0);
-    }
-
-    protected Model3D(Color color, double specularExponent) {
-        this(color, specularExponent, new Color(1.0));
-    }
-
-    protected Model3D(Color color, double specularExponent, Color specularColor) {
+    protected Model3D(Point3D location, Color color) {
+        this.location = location;
         this.color = color;
-        this.specularExponent = specularExponent;
-        this.specularColor = specularColor;
     }
 
 //    @Override
@@ -81,6 +78,10 @@ public abstract class Model3D {
         this.vertices.clear();
     }
 
+    public Point3D getLocation() {
+        return this.location;
+    }
+
     public abstract Point3D getPointOfIntersection(Point3D origin, Point3D ray);
 
     public Color getColor() {
@@ -95,5 +96,46 @@ public abstract class Model3D {
 
     public Color getSpecularColor() {
         return this.specularColor;
+    }
+
+    public double getReflectivity() {
+        return this.reflectivity;
+    }
+
+    public Model3D setReflectivity(double reflectivity) {
+        this.reflectivity = min(max(0.0, reflectivity), 1.0);
+
+        return this;
+    }
+
+    public double getTransmissivity() {
+        return this.transmissivity;
+    }
+
+    public Model3D setTransmissivity(double transmissivity, double indexOfRefraction) {
+        this.transmissivity = min(max(0.0, transmissivity), 1.0);
+        this.indexOfRefraction = indexOfRefraction;
+
+        return this;
+    }
+
+    public double getIndexOfRefraction() {
+        return this.indexOfRefraction;
+    }
+
+    public double getRefractionRatio(Point3D location, Point3D direction) {
+        return 0.0;
+    }
+
+    public Model3D setSpecularExponent(double exponent) {
+        this.specularExponent = exponent;
+
+        return this;
+    }
+
+    public Model3D setSpecularColor(Color specularColor) {
+        this.specularColor = specularColor;
+
+        return this;
     }
 }

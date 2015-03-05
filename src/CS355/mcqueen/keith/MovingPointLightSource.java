@@ -19,11 +19,11 @@ public class MovingPointLightSource extends PointLightSource {
     }
 
     public MovingPointLightSource(float r, float g, float b, Point3D location) {
-        super(r, g, b, location);
+        super(location, r, g, b);
     }
 
     public MovingPointLightSource(Color color, Point3D location) {
-        super(color, location);
+        super(location, color);
     }
 
     @Override

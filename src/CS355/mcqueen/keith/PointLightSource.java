@@ -2,6 +2,8 @@ package CS355.mcqueen.keith;
 
 import CS355.LWJGL.Point3D;
 
+import java.util.Map;
+
 import static java.lang.Math.max;
 import static java.lang.Math.pow;
 import static org.lwjgl.opengl.GL11.*;
@@ -10,43 +12,55 @@ public class PointLightSource extends LightSource {
     private Point3D location;
 
     public PointLightSource(Point3D location) {
-        this(0.5f, 0.5f, 0.5f, location);
+        this(location, 0.5f, 0.5f, 0.5f);
     }
 
-    public PointLightSource(float r, float g, float b, Point3D location) {
-        this(new Color(r, g, b), location);
+    public PointLightSource(Point3D location, float r, float g, float b) {
+        this(location, new Color(r, g, b));
     }
 
-    public PointLightSource(Color color, Point3D location) {
+    public PointLightSource(Point3D location, Color color) {
         super(color);
         this.location = location;
     }
 
     @Override
-    public Color getColorFor(Model3D model, Point3D location, Point3D eyeLocation) {
+    public Color getColorFor(Model3D model, Point3D location, Point3D eyeLocation, Iterable<Model3D> obstacles) {
         Color c_r = model.getColor();
         if (null == c_r) {
-            return new Color(0.0);
+            return NO_CONTRIBUTION;
         }
 
         Point3D n = model.getNormal(location);
         if (null == n) {
-            return new Color(0.0);
+            return NO_CONTRIBUTION;
         }
 
+        // check to see if there are any obstacles between me and the location
         Point3D l = this.getLocation().subtract(location).normalize();
-        double d_squared = l.length();
+        Color transmittedColor = NO_CONTRIBUTION;
+        Map.Entry<Model3D, Point3D> obstacle = RayTracer.findIntersection(location, l, obstacles, model);
+        if (null != obstacle) {
+            Model3D occlusion = obstacle.getKey();
+            if (occlusion.getTransmissivity() <= 0.0) {
+                return NO_CONTRIBUTION;
+            }
 
+            transmittedColor = transmittedColor.add(this.getColor().times(occlusion.getColor().times(occlusion.getTransmissivity())));
+            transmittedColor = transmittedColor.times(this.getColorFor(occlusion, obstacle.getValue(), eyeLocation, obstacles));
+        }
+
+        double d_squared = l.length();
         Color diffuseColor = this.computeDiffuseColor(c_r, n, l, d_squared);
 
         double p = model.getSpecularExponent();
+        Color highlightColor = NO_CONTRIBUTION;
         if (null != eyeLocation && p > 0.0) {
             Point3D e = eyeLocation.subtract(location).normalize();
-            Color specularColor = this.computeSpecularColor(model.getSpecularColor(), n, l, d_squared, e, p);
-            return diffuseColor.add(specularColor);
+            highlightColor = this.computeSpecularColor(model.getSpecularColor(), n, l, d_squared, e, p);
         }
 
-        return diffuseColor;
+        return transmittedColor.add(diffuseColor).add(highlightColor);
     }
 
     private Color computeSpecularColor(Color c_p, Point3D n, Point3D l, double d_squared, Point3D e, double p) {

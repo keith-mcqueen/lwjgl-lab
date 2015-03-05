@@ -27,7 +27,7 @@ public class SphereModel extends Model3D {
     }
 
     public SphereModel(Point3D center, double radius, Color color) {
-        super(color);
+        super(center, color);
 
         this.center = center;
         this.radius = radius;
@@ -57,172 +57,20 @@ public class SphereModel extends Model3D {
     }
 
     private Point3D getPointOfIntersection(Point3D r_o, Point3D r_d, int verboseness) {
-        DecimalFormat df = new DecimalFormat("#.###");
-
-        switch (verboseness) {
-            case VERBOSENESS_HIGH:
-                System.out.println("Compute the point of intersection for the ray $\\vec {r_d} = " +
-                        r_d + "$ originating from the point $r_o = " +
-                        r_o + "$ and the sphere with radius $r = " +
-                        df.format(this.radius) + "$ centered at $S_c = " + this.center + "$.");
-                System.out.println();
-                break;
-
-            case VERBOSENESS_MEDIUM:
-            case VERBOSENESS_LOW:
-                System.out.println(this);
-                System.out.println("r_o = " + r_o);
-                System.out.println("r_d = " + r_d);
-                System.out.println();
-                break;
-
-            case VERBOSENESS_NONE:
-            default:
-                break;
-        }
-
         // Step 0 - Normalize r_d (if necessary)
         Point3D r_d_normalized = r_d.normalize();
-
-        if (r_d.lengthSquared() == 1.0d) {
-            switch (verboseness) {
-                case VERBOSENESS_HIGH:
-                    System.out.println("The ray vector $r_d$ is already normalized to a unit vector.");
-                    System.out.println();
-                    break;
-
-                case VERBOSENESS_MEDIUM:
-                case VERBOSENESS_LOW:
-                    System.out.println("r_d is already normalized");
-                    break;
-
-                case VERBOSENESS_NONE:
-                default:
-                    break;
-            }
-        } else {
-            switch (verboseness) {
-                case VERBOSENESS_HIGH:
-                    System.out.println("The ray vector $r_d$ needs to be normalized to a unit vector.");
-                    System.out.println();
-                    System.out.println("$$\\begin{aligned}");
-                    System.out.println("\\hat {r_d} &= \\frac {\\vec {r_d}} {\\left|\\left| \\vec {r_d} \\right|\\right|} \\\\");
-                    System.out.println("&= " + r_d_normalized.toString(AS_COLUMN_VECTOR));
-                    System.out.println("\\end{aligned}$$");
-                    System.out.println();
-                    break;
-
-                case VERBOSENESS_MEDIUM:
-                case VERBOSENESS_LOW:
-                    System.out.println("r_d_normalized = " + r_d_normalized);
-                    break;
-
-                case VERBOSENESS_NONE:
-                default:
-                    break;
-            }
-        }
-
 
         // Step 1 - Determine whether the r_d's origin is outside the sphere
         Point3D OC = this.center.subtract(r_o);
         double OC_length = OC.length();
         double oc_length_squared = OC.lengthSquared();
-
-        switch (verboseness) {
-            case VERBOSENESS_HIGH:
-                System.out.println("Find $\\vec {OC}$ (the vector from the ray origin ($r_o$) to the sphere's center ($S_c$)):");
-                System.out.println();
-                System.out.println("$$\\begin{aligned}");
-                System.out.println("\\vec {OC} &= \\vec {S_c} - \\vec {r_o} \\\\");
-                System.out.println("&= " + this.center.toString(AS_COLUMN_VECTOR) + " - " + r_o.toString(AS_COLUMN_VECTOR) + " \\\\");
-                System.out.println("&= " + OC.toString(AS_COLUMN_VECTOR));
-                System.out.println("\\end{aligned}$$");
-                System.out.println();
-
-                System.out.println("Find the length of $\\vec {OC}$:");
-                System.out.println();
-                System.out.println("$$\\begin{aligned}");
-                System.out.println("\\left|\\left| \\vec {OC} \\right|\\right|^2 &= " + OC.toString("(%2$s)^2 + (%3$s)^2 + (%4$s)^2") + " \\\\");
-                System.out.println("&= " + df.format(oc_length_squared));
-                System.out.println("\\end{aligned}$$");
-                System.out.println();
-                break;
-
-            case VERBOSENESS_MEDIUM:
-            case VERBOSENESS_LOW:
-                System.out.println("OC = " + this.center + " - " + r_o + " = " + OC);
-                System.out.println("||OC|| = ||" + OC + "|| = " + OC_length);
-                break;
-
-            case VERBOSENESS_NONE:
-            default:
-                break;
-        }
-
         boolean originIsInsideSphere = OC_length <= this.radius;
 
-        switch (verboseness) {
-            case VERBOSENESS_HIGH:
-                System.out.println("Ray origin is " + (originIsInsideSphere ? "inside" : "outside") + " sphere, because $\\left|\\left| \\vec {OC} \\right|\\right|^2 " + (originIsInsideSphere ? "\\le" : "\\gt") + " r^2$.");
-                System.out.println();
-                break;
-
-            case VERBOSENESS_MEDIUM:
-            case VERBOSENESS_LOW:
-                System.out.println("Ray origin is " + (originIsInsideSphere ? "inside" : "outside") + " sphere");
-                break;
-
-            case VERBOSENESS_NONE:
-            default:
-                break;
-        }
-
         // Step 2 - Find the closest approach of the r_d to the sphere's center
-//        double t_ca = OC.dot(r_d);
         double t_ca = OC.dot(r_d_normalized);
-
-        switch (verboseness) {
-            case VERBOSENESS_HIGH:
-                System.out.println("Find the value for $t$ that gives the closest approach to $S_c$ ($t_{ca}$):");
-                System.out.println();
-                System.out.println("$$\\begin{aligned}");
-                System.out.println("t_{ca} &= \\vec {OC} \\cdot \\vec {r_d} \\\\");
-                System.out.println("&= " + OC.toString(AS_COLUMN_VECTOR) + " \\cdot " + r_d.toString(AS_COLUMN_VECTOR) + " \\\\");
-                System.out.println("&= " + df.format(t_ca));
-                System.out.println("\\end{aligned}$$");
-                System.out.println();
-                break;
-
-            case VERBOSENESS_MEDIUM:
-            case VERBOSENESS_LOW:
-                System.out.println("OC . rd = " + OC + " . " + r_d + " = " + t_ca);
-                System.out.println("t_ca = " + t_ca);
-                break;
-
-            case VERBOSENESS_NONE:
-            default:
-                break;
-        }
 
         // Step 3 - Determine whether the r_d intersects the sphere
         if (t_ca < 0.0d) {
-            switch (verboseness) {
-                case VERBOSENESS_HIGH:
-                    System.out.println("Ray does NOT intersect the sphere, because $t_{ca} \\lt 0$.");
-                    System.out.println();
-                    break;
-
-                case VERBOSENESS_MEDIUM:
-                case VERBOSENESS_LOW:
-                    System.out.println("Ray does NOT intersect the sphere");
-                    System.out.println();
-                    break;
-
-                case VERBOSENESS_NONE:
-                default:
-                    break;
-            }
             return null;
         }
 
@@ -231,123 +79,38 @@ public class SphereModel extends Model3D {
         double t_ca_squared = t_ca * t_ca;
         double t_hc_squared = radius_squared - oc_length_squared + t_ca_squared;
 
-        switch (verboseness) {
-            case VERBOSENESS_HIGH:
-                System.out.println("Find the value for $t$ that gives the distance from the point of intersection on the sphere to the point of closest approach ($t_{hc}$):");
-                System.out.println();
-                System.out.println("$$\\begin{aligned}");
-                System.out.println("t_{hc}^2 &= r^2 - \\left|\\left| \\vec {OC} \\right|\\right|^2 + t_{ca}^2 \\\\");
-                System.out.println("&= (" + df.format(this.radius) + ")^2 - " + df.format(oc_length_squared) + " + (" + df.format(t_ca) + ")^2 \\\\");
-                System.out.println("&= " + df.format(t_hc_squared) + " \\\\");
-                System.out.println("\\end{aligned}$$");
-                System.out.println();
-                break;
-
-            case VERBOSENESS_MEDIUM:
-            case VERBOSENESS_LOW:
-                System.out.println("t_hc_squared = " + t_hc_squared);
-                break;
-
-            case VERBOSENESS_NONE:
-            default:
-                break;
-        }
-
         // Step 5 - Determine whether the r_d intersects the sphere
         if (t_hc_squared < 0.0d) {
-            switch (verboseness) {
-                case VERBOSENESS_HIGH:
-                    System.out.println("Ray does NOT intersect the sphere, because $t_{hc}^2 \\lt 0$.");
-                    System.out.println();
-                    break;
-
-                case VERBOSENESS_MEDIUM:
-                case VERBOSENESS_LOW:
-                    System.out.println("Ray does NOT intersect the sphere");
-                    System.out.println();
-                    break;
-
-                case VERBOSENESS_NONE:
-                default:
-                    break;
-            }
             return null;
         }
 
-        double t_hc = Math.sqrt(t_hc_squared);
-
-        switch (verboseness) {
-            case VERBOSENESS_HIGH:
-                System.out.println("$$\\begin{aligned}");
-                System.out.println("t_{hc} &= " + df.format(t_hc));
-                System.out.println("\\end{aligned}$$");
-                System.out.println();
-                break;
-
-            case VERBOSENESS_MEDIUM:
-            case VERBOSENESS_LOW:
-                System.out.println("t_hc = " + t_hc);
-                break;
-
-            case VERBOSENESS_NONE:
-            default:
-                break;
-        }
-
         // Step 6 - Calculate the intersection distance
+        double t_hc = Math.sqrt(t_hc_squared);
         double t = t_ca - ((originIsInsideSphere ? -1 : 1) * t_hc);
-
-        switch (verboseness) {
-            case VERBOSENESS_HIGH:
-                System.out.println("Find the value for $t$ that gives the point of intersection on the sphere:");
-                System.out.println();
-                System.out.println("$$\\begin{aligned}");
-                System.out.println("t &= t_{ca} + t_{hc} \\\\");
-                System.out.println("&= " + df.format(t_ca) + (originIsInsideSphere ? " + " : " - ") + df.format(t_hc) + " \\\\");
-                System.out.println("&= " + df.format(t));
-                System.out.println("\\end{aligned}$$");
-                System.out.println();
-                break;
-
-            case VERBOSENESS_MEDIUM:
-            case VERBOSENESS_LOW:
-                System.out.println("t = " + t);
-                break;
-
-            case VERBOSENESS_NONE:
-            default:
-                break;
-        }
 
         // Step 7 - Calculate the intersection point
         Point3D intersectionPoint = r_o.add(r_d_normalized.times(t));
 
-        switch (verboseness) {
-            case VERBOSENESS_HIGH:
-                System.out.println("Find the point of intersection on the sphere:");
-                System.out.println();
-                System.out.println("$$\\begin{aligned}");
-                System.out.println("\\vec {r(t)} &= \\vec {r_o} + \\hat {r_d}t \\\\");
-                System.out.println("&= " + r_o.toString(AS_COLUMN_VECTOR) + " + " + df.format(t) + r_d_normalized.toString(AS_COLUMN_VECTOR) + " \\\\");
-                System.out.println("&= " + intersectionPoint.toString(AS_COLUMN_VECTOR));
-                System.out.println("\\end{aligned}$$");
-                System.out.println();
-                break;
-
-            case VERBOSENESS_MEDIUM:
-            case VERBOSENESS_LOW:
-                System.out.println("intersectionPoint = " + r_o + " " + r_d_normalized + " * " + t + " = " + intersectionPoint);
-                break;
-
-            case VERBOSENESS_NONE:
-            default:
-                break;
-        }
-
         return intersectionPoint;
     }
 
+    @Override
+    public double getRefractionRatio(Point3D location, Point3D direction) {
+        double n = this.getIndexOfRefraction();
+        if (n <= 0.0) {
+            return 0.0;
+        }
+
+        Point3D toCenter = this.center.subtract(location);
+        if (toCenter.dot(direction) > 0.0) {
+            return 1.0 / n;
+        }
+
+        return n;
+    }
+
     public static void main(String[] args) {
+        /*
         Random random = new Random(System.currentTimeMillis());
         int bound = 11;
 
@@ -372,5 +135,10 @@ public class SphereModel extends Model3D {
         System.out.println("```");
         sphere.getPointOfIntersection(camera, ray, VERBOSENESS_LOW);
         System.out.println("```");
+        */
+
+        SphereModel sphere = new SphereModel(new Point3D(0.0), 10.0, null);
+        Point3D intersection = sphere.getPointOfIntersection(new Point3D(0.0, 0.0, -11.0), new Point3D(0.0, 0.0, 1.0));
+        System.out.println("intersection = " + intersection);
     }
 }

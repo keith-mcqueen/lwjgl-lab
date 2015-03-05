@@ -20,10 +20,10 @@ public class AmbientLightSource extends LightSource {
     }
 
     @Override
-    public Color getColorFor(Model3D model, Point3D location, Point3D eyeLocation) {
+    public Color getColorFor(Model3D model, Point3D location, Point3D eyeLocation, Iterable<Model3D> obstacles) {
         Color modelColor = model.getColor();
         if (null == modelColor) {
-            return new Color(0.0);
+            return NO_CONTRIBUTION;
         }
 
         return modelColor.times(this.getColor());

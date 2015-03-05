@@ -11,7 +11,7 @@ public class Slice3D extends TriangleModel {
     private final double slicePlane;
 
     public Slice3D(TriangleModel originalModel, Axis axis, double slicePlane) {
-        super(null);
+        super(null, null);
 
         this.originalModel = originalModel;
         this.axis = axis;
@@ -65,7 +65,7 @@ public class Slice3D extends TriangleModel {
         Point3D rightPoint = this.interpolate(vertices.get(right[0]), vertices.get(right[1]));
 
         // create a pseudo-triangle from these points and save it
-        this.addTriangle(new Triangle3D(leftPoint, rightPoint, rightPoint));
+        this.addTriangle(new Triangle3D(leftPoint, rightPoint, rightPoint, null));
     }
 
     private Point3D interpolate(Point3D pointA, Point3D pointB) {

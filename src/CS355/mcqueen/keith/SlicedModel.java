@@ -10,7 +10,7 @@ public class SlicedModel extends Model3D {
     private List<Slice3D> slices = new ArrayList<>();
 
     public SlicedModel(TriangleModel originalModel, Axis axis, int numSlices) {
-        super(null);
+        super(originalModel.getLocation(), originalModel.getColor());
 
         this.originalModel = originalModel;
 

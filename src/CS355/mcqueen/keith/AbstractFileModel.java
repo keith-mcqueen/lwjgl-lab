@@ -1,12 +1,14 @@
 package CS355.mcqueen.keith;
 
+import CS355.LWJGL.Point3D;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public abstract class AbstractFileModel extends TriangleModel {
-    public AbstractFileModel(String file) {
-        super(null);
+    public AbstractFileModel(String file, Point3D location, Color color) {
+        super(location, color);
 
         if (!this.isValidFile(file)) {
             throw new IllegalArgumentException("Invalid file: " + file);

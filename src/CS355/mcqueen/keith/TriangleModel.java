@@ -8,8 +8,8 @@ import java.util.List;
 public class TriangleModel extends Model3D {
     private List<Triangle3D> triangles = new ArrayList<>();
 
-    public TriangleModel(Color color) {
-        super(color);
+    public TriangleModel(Point3D location, Color color) {
+        super(location, color);
     }
 
     protected boolean addTriangle(Triangle3D t) {
@@ -35,6 +35,12 @@ public class TriangleModel extends Model3D {
 
     @Override
     public Point3D getNormal(Point3D point) {
+        for (Triangle3D triangle : this.triangles) {
+            if (triangle.contains(point)) {
+                return triangle.getNormal(point);
+            }
+        }
+
         return null;
     }
 

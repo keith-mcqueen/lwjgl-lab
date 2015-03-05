@@ -49,9 +49,9 @@ public class CameraController extends StudentLWJGLController {
         if (args.length > 0) {
             String modelFile = args[0];
             if (modelFile.endsWith(".obj")) {
-                this.inputModel = new ObjFileModel(modelFile);
+                this.inputModel = new ObjFileModel(modelFile, new Point3D(0.0), null);
             } else if (modelFile.endsWith(".stl")) {
-                this.inputModel = new StlFileModel(modelFile);
+                this.inputModel = new StlFileModel(modelFile, new Point3D(0.0), null);
             }
 
             this.model = new SlicedModel(this.inputModel, this.sliceAxis, this.numSlices);
@@ -77,9 +77,9 @@ public class CameraController extends StudentLWJGLController {
         DirectionalLightSource d = new DirectionalLightSource(new Color(0.4, 0.4, 0.4), new Point3D(1.0, 1.0, 1.0));
 
         // point light source(s)
-        PointLightSource p1 = new PointLightSource(new Color(6.0, 0.0, 0.0), new Point3D(80.0, 80.0, 80.0));
-        PointLightSource p2 = new PointLightSource(new Color(0.0, 6.0, 0.0), new Point3D(-80.0, -80.0, -80.0));
-        PointLightSource p3 = new PointLightSource(new Color(0.0, 0.0, 6.0), new Point3D(0.0, 80.0, 80.0));
+        PointLightSource p1 = new PointLightSource(new Point3D(80.0, 80.0, 80.0), new Color(6.0, 0.0, 0.0));
+        PointLightSource p2 = new PointLightSource(new Point3D(-80.0, -80.0, -80.0), new Color(0.0, 6.0, 0.0));
+        PointLightSource p3 = new PointLightSource(new Point3D(0.0, 80.0, 80.0), new Color(0.0, 0.0, 6.0));
 
         // moving point light sources
 //        MovingPointLightSource m1 = new MovingPointLightSource(new Color(0.6, 0.0, 0.0), new Point3D(0.0, 0.0, 0.0));

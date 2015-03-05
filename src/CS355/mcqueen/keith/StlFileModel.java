@@ -10,8 +10,8 @@ import java.util.List;
 public class StlFileModel extends AbstractFileModel {
     private List<Point3D> currentVertices = new ArrayList<>();
 
-    public StlFileModel(String stlFile) {
-        super(stlFile);
+    public StlFileModel(String stlFile, Point3D location, Color color) {
+        super(stlFile, location, color);
 
         this.parseFile(stlFile);
     }
@@ -36,7 +36,7 @@ public class StlFileModel extends AbstractFileModel {
                 break;
 
             case "endloop":
-                this.addTriangle(new Triangle3D(this.currentVertices.get(0), this.currentVertices.get(1), this.currentVertices.get(2)));
+                this.addTriangle(new Triangle3D(this.currentVertices.get(0), this.currentVertices.get(1), this.currentVertices.get(2), this.getColor()));
                 this.currentVertices.clear();
                 break;
         }

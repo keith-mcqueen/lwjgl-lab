@@ -1,6 +1,9 @@
 package CS355.mcqueen.keith;
 
 import CS355.LWJGL.Point3D;
+
+import java.util.Map;
+
 import static java.lang.Math.max;
 
 public class DirectionalLightSource extends LightSource {
@@ -20,15 +23,21 @@ public class DirectionalLightSource extends LightSource {
     }
 
     @Override
-    public Color getColorFor(Model3D model, Point3D location, Point3D eyeLocation) {
+    public Color getColorFor(Model3D model, Point3D location, Point3D eyeLocation, Iterable<Model3D> obstacles) {
         Color baseColor = model.getColor();
         if (null == baseColor) {
-            return new Color(0.0);
+            return NO_CONTRIBUTION;
         }
 
         Point3D normal = model.getNormal(location);
         if (null == normal) {
-            normal = new Point3D(0.0);
+            return NO_CONTRIBUTION;
+        }
+
+        // check to see if there are any obstacles between me and the location
+        Map.Entry<Model3D, Point3D> obstacle = RayTracer.findIntersection(location, this.direction, obstacles, model);
+        if (null != obstacle) {
+            return NO_CONTRIBUTION;
         }
 
         return baseColor.times(this.getColor()).times(max(0.0d, normal.dot(this.direction)));

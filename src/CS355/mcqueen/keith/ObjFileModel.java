@@ -7,11 +7,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ObjFileModel extends AbstractFileModel {
+    private List<Point3D> normals = new ArrayList<>();
 
-    public ObjFileModel(String objFile) {
-        super(objFile);
+    public ObjFileModel(String objFile, Point3D location, Color color) {
+        super(objFile, location, color);
 
         this.parseFile(objFile);
     }
@@ -49,7 +51,7 @@ public class ObjFileModel extends AbstractFileModel {
             throw new IllegalArgumentException("At least 4 tokens expected for vertex line: " + line);
         }
 
-        this.addVertex(Double.valueOf(tokens[1]), Double.valueOf(tokens[2]), Double.valueOf(tokens[3]));
+        this.addVertex(new Point3D(Double.valueOf(tokens[1]), Double.valueOf(tokens[2]), Double.valueOf(tokens[3])).add(this.getLocation()));
     }
 
     private void handleNormalLine(String line, String... tokens) {
@@ -57,7 +59,7 @@ public class ObjFileModel extends AbstractFileModel {
             throw new IllegalArgumentException("At least 4 tokens expected for vertex-normal line: " + line);
         }
 
-//        this.normals.add(new Point3D(Double.valueOf(tokens[1]), Double.valueOf(tokens[2]), Double.valueOf(tokens[3])));
+        this.normals.add(new Point3D(Double.valueOf(tokens[1]), Double.valueOf(tokens[2]), Double.valueOf(tokens[3])));
     }
 
     private void handleFaceLine(String line, String... tokens) {
@@ -75,24 +77,27 @@ public class ObjFileModel extends AbstractFileModel {
 
             // get the vertex (represented by the first subtoken)
             int vertexIndex = Integer.valueOf(subtokens[0]);
-            faceVertices.add(this.getVertex(vertexIndex - 1));
+            Point3D location = this.getVertex(vertexIndex - 1);
 
             // if a vertex normal is represented (the 3rd subtoken), then get that
-//            if (subtokens.length >= 3) {
-//                int normalIndex = Integer.valueOf(subtokens[2]);
-//
-//            }
+            Point3D normal = null;
+            if (subtokens.length >= 3) {
+                int normalIndex = Integer.valueOf(subtokens[2]);
+                normal = this.normals.get(normalIndex - 1);
+            }
+
+            faceVertices.add(new Vertex(location, normal));
         }
 
         switch (faceVertices.size()) {
             case 3:
-                this.addTriangle(new Triangle3D(faceVertices.get(0), faceVertices.get(1), faceVertices.get(2)));
+                this.addTriangle(new Triangle3D(faceVertices.get(0), faceVertices.get(1), faceVertices.get(2), this.getColor()));
                 break;
 
             case 4:
                 // we've got a quadrilateral that needs to be broken up into 2 triangles
-                this.addTriangle(new Triangle3D(faceVertices.get(0), faceVertices.get(1), faceVertices.get(3)));
-                this.addTriangle(new Triangle3D(faceVertices.get(1), faceVertices.get(2), faceVertices.get(3)));
+                this.addTriangle(new Triangle3D(faceVertices.get(0), faceVertices.get(1), faceVertices.get(3), this.getColor()));
+                this.addTriangle(new Triangle3D(faceVertices.get(1), faceVertices.get(2), faceVertices.get(3), this.getColor()));
                 break;
 
             default:

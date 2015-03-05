@@ -22,7 +22,7 @@ public class FlatShader extends Shader {
 
         // for each configured light source, add the color for this triangle
         for (LightSource lightSource : this.getLightSources()) {
-            shade = shade.add(lightSource.getColorFor(null, centroid, null));
+            shade = shade.add(lightSource.getColorFor(null, centroid, null, null));
         }
 
         // set the final color
