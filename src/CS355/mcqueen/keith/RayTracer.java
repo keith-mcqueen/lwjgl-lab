@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class RayTracer {
     private static final Random RANDOM = new Random(System.currentTimeMillis());
-    private static final double ANTI_ALIASING_RAYS = 1.0;
+    private static final double ANTI_ALIASING_RAYS = 15.0;
     private static final int MAX_BOUNCES = 5;
     private static final double[][] CORNERS = new double[][] {{0.0, 0.0}, {1.0, 0.0}, {1.0, 1.0}, {0.0, 1.0}};
 
@@ -23,7 +23,7 @@ public class RayTracer {
     private final int rows, cols;
     private final double depth;
 
-    public static final int SCREEN_WIDTH = 300;
+    public static final int SCREEN_WIDTH = 200;
     public static final int SCREEN_HEIGHT = SCREEN_WIDTH;
 
     public RayTracer(Camera camera, Scene scene) {
@@ -187,15 +187,15 @@ public class RayTracer {
         Scene scene = new Scene(SCREEN_WIDTH, SCREEN_HEIGHT, new Color(0.4));
 
         // add some regularly placed spheres
-//        scene.addModel(new SphereModel(new Point3D(25.0, -10.0d, -100.0d), 10.0d, Color.randomColor()).setReflectivity(0.4));
-//        scene.addModel(new SphereModel(new Point3D(25.0, -10.0d, -200.0d), 10.0d, Color.randomColor()).setReflectivity(0.4));
-//        scene.addModel(new SphereModel(new Point3D(25.0, -10.0d, -300.0d), 10.0d, Color.randomColor()).setReflectivity(0.4));
+        scene.addModel(new SphereModel(new Point3D(25.0, -10.0d, -100.0d), 10.0d, Color.randomColor()).setReflectivity(0.4));
+        scene.addModel(new SphereModel(new Point3D(25.0, -10.0d, -200.0d), 10.0d, Color.randomColor()).setReflectivity(0.4));
+        scene.addModel(new SphereModel(new Point3D(25.0, -10.0d, -300.0d), 10.0d, Color.randomColor()).setReflectivity(0.4));
 //        scene.addModel(new SphereModel(new Point3D(25.0, -20.0d, -400.0d), 10.0d, randomColor()));
 //        scene.addModel(new SphereModel(new Point3D(25.0, -20.0d, -500.0d), 10.0d, randomColor()));
 
-//        scene.addModel(new SphereModel(new Point3D(-25.0, -10.0d, -100.0d), 10.0d, Color.randomColor()).setTransmissivity(0.50, 1.5).setReflectivity(0.10));
-//        scene.addModel(new SphereModel(new Point3D(-25.0, -10.0d, -200.0d), 10.0d, Color.randomColor()).setTransmissivity(0.50, 1.5).setReflectivity(0.10));
-//        scene.addModel(new SphereModel(new Point3D(-25.0, -10.0d, -300.0d), 10.0d, Color.randomColor()).setTransmissivity(0.50, 1.5).setReflectivity(0.10));
+        scene.addModel(new SphereModel(new Point3D(-25.0, -10.0d, -100.0d), 10.0d, Color.randomColor()).setTransmissivity(0.50, 1.5).setReflectivity(0.10));
+        scene.addModel(new SphereModel(new Point3D(-25.0, -10.0d, -200.0d), 10.0d, Color.randomColor()).setTransmissivity(0.50, 1.5).setReflectivity(0.10));
+        scene.addModel(new SphereModel(new Point3D(-25.0, -10.0d, -300.0d), 10.0d, Color.randomColor()).setTransmissivity(0.50, 1.5).setReflectivity(0.10));
 //        scene.addModel(new SphereModel(new Point3D(-25.0, -20.0d, -400.0d), 10.0d, randomColor()));
 //        scene.addModel(new SphereModel(new Point3D(-25.0, -20.0d, -500.0d), 10.0d, randomColor()));
 
@@ -204,20 +204,14 @@ public class RayTracer {
 //        scene.addModel(new SphereModel(new Point3D(0.0, -10.0, -100.0), 10.0, new Color(1.0)).setTransmissivity(0.75, 1.5).setReflectivity(0.10));
 
         // add a flat/planar surface underneath
-        scene.addModel(new CircularPlaneModel(new Point3D(0.0, -20.0, -150.0), 250.0, new Point3D(0.0, 1.0, 0.0), new Color(0.9)).setReflectivity(0.25));
+        scene.addModel(new CircularPlaneModel(new Point3D(0.0, -20.0, -150.0), 250.0, new Point3D(0.0, 1.0, 0.0), new Color(0.9))/*.setReflectivity(0.25)*/);
 
         // add an OBJ model from a file
-//        scene.addModel(new ObjFileModel("/Users/keith/School/CS-455/Labs/obj-files-455/blocky-cylinder.obj", new Point3D(0.0, 0.0, -150.0), new Color(1.0, 1.0, 0.0)));
-        Point3D a = new Point3D(-10.0, 0.0, -150.0);
-        Point3D b = new Point3D(10.0, 0.0, -150.0);
-        Point3D c = new Point3D(0.0, 15.0, -165.0);
-        Color color = new Color(1.0, 1.0, 0.0);
-//        scene.addModel(new Triangle3D(a, b, c, color));
-        scene.addModel(new Triangle3D(b, a, c, color));
+//        scene.addModel(new ObjFileModel("/Users/keith/School/CS-455/Labs/obj-files-455/flower.obj", new Point3D(0.0, 0.0, -150.0), new Color(1.0, 1.0, 0.0)));
+//        scene.addModel(new ObjFileModel("/Users/keith/School/CS-455/Labs/obj-files-455/blocky-cylinder.obj", new Point3D(0.0, -20.0, -100.0), new Color(1.0, 1.0, 0.0)));
+//        scene.addModel(new ObjFileModel("/Users/keith/School/CS-455/Labs/obj-files-455/box.obj", new Point3D(0.0, 20.0, -100.0), new Color(1.0, 1.0, 0.0)));
 
         // add some light sources
-//        scene.addLight(new DirectionalLightSource(new Point3D(0.0, 1.0, 0.0)));
-//        scene.addLight(new PointLightSource(new Point3D(0.0, 100.0, -150.0), new Color(0.5)));
 //        scene.addLight(new AreaLightSource(new Point3D(0.0, 50.0, -150.0), 20.0, new Point3D(0.0, -1.0, 0.0), new Color(0.5)));
         scene.addLight(new AreaLightSource(new Point3D(50.0, 50.0, -150.0), 20.0, new Point3D(0.0, -1.0, 0.0), new Color(0.5)));
         scene.addLight(new AmbientLightSource(new Color(0.6)));

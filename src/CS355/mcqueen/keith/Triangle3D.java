@@ -2,6 +2,7 @@ package CS355.mcqueen.keith;
 
 import CS355.LWJGL.Point3D;
 
+import java.awt.*;
 import java.util.List;
 
 public class Triangle3D extends PlaneModel {
@@ -29,6 +30,57 @@ public class Triangle3D extends PlaneModel {
         Point3D ac = c.subtract(a);
 
         return ab.cross(ac).normalize();
+    }
+
+    @Override
+    public Point3D getNormal(Point3D point) {
+        // adapted from http://mathforum.org/library/drmath/view/62814.html
+
+        // get the vertices
+        Point3D a = this.getVertex(0);
+        Point3D b = this.getVertex(1);
+        Point3D c = this.getVertex(2);
+
+        // make them 1st class vertices (if possible)
+        Vertex p1, p2, p3;
+        Point3D n1, n2, n3;
+        p1 = p2 = p3 = null;
+        n1 = n2 = n3 = null;
+        if (a instanceof Vertex) {
+            p1 = (Vertex) a;
+            n1 = p1.getNormal();
+        }
+        if (b instanceof Vertex) {
+            p2 = (Vertex) b;
+            n2 = p2.getNormal();
+        }
+        if (c instanceof Vertex) {
+            p3 = (Vertex) c;
+            n3 = p3.getNormal();
+        }
+
+        // make sure we have all vertices
+        if (null == p1 || null == p2 || null == p3 || null == n1 || null == n2 || null == n3) {
+            return super.getNormal(point);
+        }
+
+        // compute the point of intersection of the vector from p1 to the given point and the edge formed by p2 and p3
+        Point3D v1 = point.subtract(p1).normalize();
+        Point3D p2_minus_p1 = p2.subtract(p1).normalize();
+        Point3D v2 = p3.subtract(p2).normalize();
+
+        double t = p2_minus_p1.cross(v2).length() / v1.cross(v2).length();
+
+        Point3D p_i = p1.add(v1.times(t));
+
+        // interpolate the normal between p2 and p3 for point of intersection
+        Point3D n_p_i = n2.add(n3.subtract(n2).times(p_i.subtract(p2).length() / p3.subtract(p2).length()));
+
+        // interpolate the normal between p1 and the point of intersection for the final normal
+        Point3D n_p = n1.add(n_p_i.subtract(n1).times(point.subtract(p1).length() / p_i.subtract(p1).length()));
+
+        return n_p;
+//        return super.getNormal(point);
     }
 
     @Override
